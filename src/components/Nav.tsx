@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { navigation } from '../data/navigation';
@@ -20,9 +20,10 @@ export function Nav({ tone }: { tone: 'light' | 'dark' }) {
     window.addEventListener('scroll', on, { passive: true });
     return () => window.removeEventListener('scroll', on);
   }, []);
+  const toggle = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
-    const k = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    const k = (e: KeyboardEvent) => { if (e.key === 'Escape' && open) { setOpen(false); toggle.current?.focus(); } };
     window.addEventListener('keydown', k);
     return () => window.removeEventListener('keydown', k);
   }, [open]);
@@ -53,21 +54,20 @@ export function Nav({ tone }: { tone: 'light' | 'dark' }) {
               <span data-text={n.label}>{n.label}</span>
             </a>
           ) : (
-            <NavLink key={n.label} to={n.to} className={({ isActive: a }) => `nav-link ${a ? 'active' : ''}`}>
+            <NavLink key={n.label} to={n.to} className={({ isActive: a }) => `nav-link ${n.label === 'Resume' ? 'cta' : ''} ${a ? 'active' : ''}`}>
               <span data-text={n.label}>{n.label}</span>
             </NavLink>
           ),
         )}
       </nav>
-      <button className="nav-toggle" aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? 'Close menu' : 'Open menu'} onClick={() => setOpen((o) => !o)}>
+      <button ref={toggle} className="nav-toggle" aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? 'Close menu' : 'Open menu'} onClick={() => setOpen((o) => !o)}>
         {open ? <X size={20} /> : <Menu size={20} />}
       </button>
-      <div id="mobile-menu" className={`mobile-menu ${open ? 'open' : ''}`} aria-hidden={!open}>
+      <div id="mobile-menu" className={`mobile-menu ${open ? 'open' : ''}`} inert={!open}>
         {navigation.map((n, i) => (
           <a
             key={n.label}
             href={n.to}
-            tabIndex={open ? 0 : -1}
             style={{ transitionDelay: open ? `${120 + i * 70}ms` : '0ms' }}
             onClick={(e) => { e.preventDefault(); setOpen(false); n.to.startsWith('/#') && onHome ? goWork(e) : navigate(n.to); }}
           >

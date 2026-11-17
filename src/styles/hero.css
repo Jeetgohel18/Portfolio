@@ -95,3 +95,8 @@
 }
 .land, .trees { z-index: 3; }
 .sky-copy { z-index: 4; }
+/* overlap of the stacked intro card: keep controls clear of it */
+.sky-controls { bottom: calc(clamp(24px, 4vw, 56px) + 14px); }
+.sky-copy { bottom: calc(clamp(24px, 4vw, 56px) + clamp(90px, 14vh, 150px)); }
+@media (max-width: 760px) { .sky-controls { bottom: calc(clamp(24px, 4vw, 56px) + 10px); } .sky-copy { bottom: 190px; } }
+@media (max-width: 560px) { .sky-title { font-size: clamp(92px, 27vw, 140px); } .sky-copy { bottom: 196px; gap: 14px; } }

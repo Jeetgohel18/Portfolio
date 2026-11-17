@@ -155,3 +155,74 @@ export function PhonePair({ project }: { project: Project }) {
     </div>
   );
 }
+
+/* ---------- Added in refinement pass ---------- */
+import { Img, ScreenImg } from '../Art';
+import { imgAlt, imgCaption, imgSrc, type CaseImage } from '../../data/caseStudies';
+
+/** Masonry-style grid that preserves each image's natural proportions. First image spans the full width. */
+export function ImageGrid({ images, label, onOpen }: { images: CaseImage[]; label: string; onOpen: (src: string, alt: string, caption?: string) => void }) {
+  return (
+    <div className="cs-grid">
+      {images.map((im, i) => {
+        const src = imgSrc(im), alt = imgAlt(im, `${label} ${i + 1}`), cap = imgCaption(im);
+        return (
+          <figure key={src + i} className={i === 0 ? 'first' : ''}>
+            <button type="button" onClick={() => onOpen(src, alt, cap)} aria-label={`Enlarge: ${alt}`}>
+              <Img src={src} alt={alt} fallback={<div className="img-missing">Image not found<code>{src}</code></div>} />
+            </button>
+            {cap && <figcaption>{cap}</figcaption>}
+          </figure>
+        );
+      })}
+    </div>
+  );
+}
+
+/** Real desktop + mobile screenshots on a themed stage. */
+export function DeviceStage({ desktop = [], mobile = [], onOpen }: { desktop?: CaseImage[]; mobile?: CaseImage[]; onOpen: (src: string, alt: string, caption?: string) => void }) {
+  return (
+    <div className="cs-devices">
+      {desktop.map((d, i) => (
+        <button key={'d' + i} type="button" className="dev-desk" onClick={() => onOpen(imgSrc(d), imgAlt(d, `Desktop screen ${i + 1}`), imgCaption(d))} aria-label={`Enlarge desktop screen ${i + 1}`}>
+          <BrowserFrame><ScreenImg src={imgSrc(d)} alt={imgAlt(d, `Desktop screen ${i + 1}`)} fallback={<div className="img-missing">Image not found<code>{imgSrc(d)}</code></div>} /></BrowserFrame>
+        </button>
+      ))}
+      {mobile.length > 0 && (
+        <div className="dev-mobs">
+          {mobile.map((m, i) => (
+            <button key={'m' + i} type="button" onClick={() => onOpen(imgSrc(m), imgAlt(m, `Mobile screen ${i + 1}`), imgCaption(m))} aria-label={`Enlarge mobile screen ${i + 1}`}>
+              <PhoneFrame><ScreenImg src={imgSrc(m)} alt={imgAlt(m, `Mobile screen ${i + 1}`)} fallback={<div className="img-missing">Not found</div>} /></PhoneFrame>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** Big placeholder device composition for the Final Design panel. */
+export function FinalStage({ project, onOpen }: { project: Project; onOpen: (src: string, alt: string) => void }) {
+  return (
+    <div className="cs-stage">
+      <button type="button" className="stage-desk" onClick={() => onOpen('', 'Desktop screen')} aria-label="Enlarge desktop screen placeholder">
+        <BrowserFrame url="your-project.com"><Screen project={project} /></BrowserFrame>
+      </button>
+      <div className="stage-phones">
+        <PhoneFrame className="sp1"><MobileScreen p={project.palette} variant={0} /></PhoneFrame>
+        <PhoneFrame className="sp2"><MobileScreen p={project.palette} variant={1} /></PhoneFrame>
+      </div>
+      <span className="stage-tag">Placeholder mockups</span>
+    </div>
+  );
+}
+
+export function JourneyStrip() {
+  const stages = ['Discover', 'Consider', 'Act', 'Return'];
+  return (
+    <div className="cs-journey" aria-label="User journey placeholder">
+      <svg viewBox="0 0 400 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40 C60 8, 90 56, 150 30 S250 4, 300 34 S370 50, 400 18" /></svg>
+      <ol>{stages.map((s, i) => <li key={s}><small>0{i + 1}</small><b>{s}</b><span>Describe this stage</span></li>)}</ol>
+    </div>
+  );
+}

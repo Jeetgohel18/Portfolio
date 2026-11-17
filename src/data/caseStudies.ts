@@ -13,15 +13,28 @@ export type SectionId =
   | 'introduction' | 'overview' | 'problem' | 'research' | 'strategy' | 'ux'
   | 'visual' | 'final' | 'prototype' | 'outcomes' | 'learnings' | 'next';
 
+/** An image path (relative to /public) or an image with caption/alt. */
+export type CaseImage = string | { src: string; caption?: string; alt?: string };
+
 export type SectionContent = {
   lead?: string;
+  /** Text for topics. `title` must match a topic title in SECTION_TEMPLATE (case-insensitive). */
   items?: { title: string; body: string }[];
-  /** paths relative to /public */
-  images?: string[];
-  /** prototype embed (Figma/Framer URL) */
+  /** Image grid shown in place of the placeholder visual for this section. */
+  images?: CaseImage[];
+  /** 'final' section only: desktop screenshots (shown in browser frames) */
+  desktop?: CaseImage[];
+  /** 'final' section only: mobile screenshots (shown in phone frames) */
+  mobile?: CaseImage[];
+  /** 'prototype' section: Figma/Framer embed URL */
   embedUrl?: string;
+  /** 'prototype' section: MP4 path relative to /public */
   video?: string;
 };
+
+export const imgSrc = (i: CaseImage) => (typeof i === 'string' ? i : i.src);
+export const imgCaption = (i: CaseImage) => (typeof i === 'string' ? undefined : i.caption);
+export const imgAlt = (i: CaseImage, fallback: string) => (typeof i === 'string' ? fallback : i.alt ?? i.caption ?? fallback);
 
 export type SectionTemplate = {
   id: SectionId;
@@ -90,7 +103,8 @@ export const SECTION_TEMPLATE: SectionTemplate[] = [
 
 export type CaseStudyConfig = {
   hiddenSections?: SectionId[];
-  heroNote?: string;
+  /** Optional: override project cover on the case study only (path relative to /public). */
+  cover?: string;
   content?: Partial<Record<SectionId, SectionContent>>;
 };
 

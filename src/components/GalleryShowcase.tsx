@@ -5,7 +5,10 @@ import { Lightbox } from './Lightbox';
 import { Reveal } from './Reveal';
 
 export function GalleryArt({ g }: { g: GalleryItem }) {
-  if (g.src) return <Img src={g.src} alt={g.title} className="cover-img" />;
+  return <Img src={g.src} alt={g.title} className="cover-img" fallback={<GalleryPlaceholder g={g} />} />;
+}
+
+function GalleryPlaceholder({ g }: { g: GalleryItem }) {
   switch (g.art) {
     case 'logo': return <BrandArt p={g.palette} />;
     case 'poster': return <PosterArt p={g.palette} />;
@@ -26,7 +29,7 @@ export function GalleryShowcase() {
   const cur = idx !== null ? items[idx] : null;
 
   return (
-    <section id="visual" className="section visual">
+    <section id="visual" className="section stack-top visual">
       <div className="wrap">
         <Reveal className="sec-head">
           <p className="eyebrow">04 — Graphic &amp; branding</p>

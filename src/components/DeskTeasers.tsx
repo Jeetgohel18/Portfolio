@@ -6,7 +6,7 @@ import { Reveal } from './Reveal';
 /** Bridge between the homepage and the interactive About + Contact experiences. */
 export function DeskTeasers() {
   return (
-    <section className="section teasers">
+    <section className="section stack-top teasers">
       <div className="wrap teasers-grid">
         <Reveal as="div" className="teaser teaser-about" >
           <Link to="/about" id="about-teaser" aria-label="Visit the interactive desk — about me">

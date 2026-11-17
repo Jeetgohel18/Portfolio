@@ -1,8 +1,9 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, ClipboardList, Coffee, Download, FileText, GraduationCap, Laptop, StickyNote, X } from 'lucide-react';
 import { education, experience, personal, skills, tools } from '../data/personal';
 import { asset } from '../lib/assets';
+import { Portrait } from '../components/Portrait';
 import { useDocTitle } from '../hooks/useDocTitle';
 
 type Key = 'story' | 'philosophy' | 'experience' | 'education' | 'skills' | 'tools' | 'interests' | 'resume';
@@ -21,7 +22,7 @@ const objects: { key: Key; label: string; hint: string; Icon: typeof BookOpen; c
 function Panel({ k }: { k: Key }): ReactNode {
   switch (k) {
     case 'story':
-      return (<><h2>Hi, I'm <em>{personal.firstName}</em>.</h2>
+      return (<><Portrait /><h2>Hi, I'm <em>{personal.firstName}</em>.</h2>
         <p>I'm a UI/UX, product and visual designer based in {personal.location}. I work across websites, dashboards and SaaS products, mobile apps, branding, graphics and motion.</p>
         <p>I studied Information Technology (B.E., 2021–2025) and now work at {personal.company}. I like to explore ideas quickly — sketching, prototyping and using AI tools such as Claude, ChatGPT and Gemini — then slow down to refine the details that matter.</p></>);
     case 'philosophy':
@@ -48,6 +49,19 @@ function Panel({ k }: { k: Key }): ReactNode {
 export default function About() {
   useDocTitle('About');
   const [active, setActive] = useState<Key | null>('story');
+  const panelRef = useRef<HTMLElement>(null);
+  const select = (k: Key) => {
+    setActive(k);
+    // on narrow screens the panel sits below the desk — bring it into view
+    if (window.matchMedia('(max-width: 900px)').matches) {
+      window.setTimeout(() => panelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
+    }
+  };
+  useEffect(() => {
+    const k = (e: KeyboardEvent) => e.key === 'Escape' && setActive(null);
+    window.addEventListener('keydown', k);
+    return () => window.removeEventListener('keydown', k);
+  }, []);
   return (
     <main id="main" className="page about">
       <div className="wrap">
@@ -61,14 +75,14 @@ export default function About() {
           <div className="desk" role="group" aria-label="Interactive desk">
             <div className="desk-lamp" aria-hidden="true" />
             {objects.map((o) => (
-              <button key={o.key} className={`obj ${o.cls} ${active === o.key ? 'on' : ''}`} onClick={() => setActive(o.key)} aria-pressed={active === o.key} aria-label={`${o.label}: ${o.hint}`}>
+              <button key={o.key} className={`obj ${o.cls} ${active === o.key ? 'on' : ''}`} onClick={() => select(o.key)} aria-pressed={active === o.key} aria-label={`${o.label}: ${o.hint}`}>
                 <span className="obj-body"><o.Icon size={22} strokeWidth={1.6} /><b>{o.hint}</b></span>
                 <span className="obj-tip">{o.label}</span>
               </button>
             ))}
           </div>
 
-          <aside className="desk-panel" aria-live="polite" aria-label="Details">
+          <aside ref={panelRef} className="desk-panel" aria-live="polite" aria-label="Details">
             {active ? (
               <div key={active} className="panel-in">
                 <button className="panel-x" onClick={() => setActive(null)} aria-label="Close details"><X size={16} /></button>

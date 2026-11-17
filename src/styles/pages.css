@@ -74,3 +74,16 @@
 .res-sec > div, .res-sec > ul { grid-column: 2; } .res-skill { display: grid; gap: 8px; margin-bottom: 14px; } .res-skill > b { font: 500 12px var(--font-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--ink-2); }
 .res-note { margin-top: 24px; }
 @media (max-width: 760px) { .res-sec { grid-template-columns: 1fr; gap: 14px; } .res-sec > div, .res-sec > ul { grid-column: 1; } .res-item ul { columns: 1; } }
+
+/* ===== Refinement pass ===== */
+.page-head { padding-block: clamp(24px, 5vw, 64px); }
+.page-head h1 { font-size: clamp(56px, 11vw, 176px); }
+.desk-panel { box-shadow: 0 30px 60px -40px rgba(20,19,15,.35); }
+.panel-in .portrait { margin-bottom: 4px; }
+.res-sec h2 { font-size: clamp(32px, 3.4vw, 48px); }
+.res-sec { transition: background .4s; }
+.page-head .btn-solid { margin-top: 6px; }
+.contact-grid > *, .letter, .env { min-width: 0; }
+.letter { justify-items: stretch; } .letter .env-open { justify-self: start; }
+@media (max-width: 400px) { .paper { margin-inline: 8px; padding: 16px; } .paper-date { font-size: 24px; } .env-flap { height: 110px; } }
+.desk-panel { scroll-margin-top: calc(var(--nav-h) + 12px); }

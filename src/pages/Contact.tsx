@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { ArrowUpRight, Check, Copy, MessageCircle } from 'lucide-react';
 import { personal } from '../data/personal';
 import { useDocTitle } from '../hooks/useDocTitle';
@@ -14,6 +14,16 @@ export default function Contact() {
   const [err, setErr] = useState<Partial<typeof v>>({});
   const [status, setStatus] = useState<Status>('idle');
   const [copied, setCopied] = useState<'ok' | 'fail' | null>(null);
+  const openBtn = useRef<HTMLButtonElement>(null);
+  const toggleEnvelope = (next: boolean) => {
+    setOpen(next);
+    if (next) window.setTimeout(() => document.getElementById('f-name')?.focus({ preventScroll: true }), 1100);
+  };
+  useEffect(() => {
+    const k = (e: KeyboardEvent) => { if (e.key === 'Escape' && open) { setOpen(false); openBtn.current?.focus(); } };
+    window.addEventListener('keydown', k);
+    return () => window.removeEventListener('keydown', k);
+  }, [open]);
 
   const validate = (x = v) => {
     const e: Partial<typeof v> = {};
@@ -32,7 +42,8 @@ export default function Contact() {
     ev.preventDefault();
     const e = validate();
     setErr(e);
-    if (Object.keys(e).length) { (document.querySelector('[aria-invalid="true"]') as HTMLElement | null)?.focus(); return; }
+    const firstBad = (['name', 'email', 'message'] as const).find((k) => e[k]);
+    if (firstBad) { document.getElementById(`f-${firstBad}`)?.focus(); return; }
     if (ENDPOINT) {
       setStatus('sending');
       try {
@@ -70,17 +81,17 @@ export default function Contact() {
             <div className="env">
               <div className="env-back" />
               <div className="env-flap" />
-              <div className="paper" aria-hidden={!open}>
-                <form onSubmit={submit} noValidate aria-label="Contact form">
+              <div className="paper" {...(!open ? { inert: true } : {})}>
+                <form id="contact-form" onSubmit={submit} noValidate aria-label="Contact form">
                   <p className="paper-date">Dear Jeet,</p>
                   <label className={err.name ? 'bad' : ''}>Your name
-                    <input value={v.name} onChange={set('name')} autoComplete="name" disabled={!open} aria-invalid={!!err.name} aria-describedby="e-name" />
-                    <small id="e-name" role="alert">{err.name}</small></label>
+                    <input id="f-name" value={v.name} onChange={set('name')} autoComplete="name" aria-required="true" disabled={!open} aria-invalid={!!err.name} aria-describedby="e-name" />
+                    <small id="e-name" role="alert" aria-live="assertive">{err.name}</small></label>
                   <label className={err.email ? 'bad' : ''}>Your email
-                    <input type="email" value={v.email} onChange={set('email')} autoComplete="email" disabled={!open} aria-invalid={!!err.email} aria-describedby="e-email" />
+                    <input id="f-email" type="email" inputMode="email" value={v.email} onChange={set('email')} autoComplete="email" aria-required="true" disabled={!open} aria-invalid={!!err.email} aria-describedby="e-email" />
                     <small id="e-email" role="alert">{err.email}</small></label>
                   <label className={err.message ? 'bad' : ''}>Message
-                    <textarea rows={5} value={v.message} onChange={set('message')} disabled={!open} aria-invalid={!!err.message} aria-describedby="e-msg" />
+                    <textarea id="f-message" rows={5} aria-required="true" value={v.message} onChange={set('message')} disabled={!open} aria-invalid={!!err.message} aria-describedby="e-msg" />
                     <small id="e-msg" role="alert">{err.message}</small></label>
                   <div className="paper-foot">
                     <button className="btn-solid" type="submit" disabled={!open || status === 'sending'}>{status === 'sending' ? 'Sending…' : ENDPOINT ? 'Send letter' : 'Open in email app'}</button>
@@ -95,7 +106,7 @@ export default function Contact() {
               </div>
               <div className="env-front" />
             </div>
-            <button className="btn-solid env-open" onClick={() => setOpen((o) => !o)} aria-expanded={open}>{open ? 'Close envelope' : 'Open the envelope'}</button>
+            <button ref={openBtn} className="btn-solid env-open" onClick={() => toggleEnvelope(!open)} aria-expanded={open} aria-controls="contact-form">{open ? 'Close envelope' : 'Open the envelope'}</button>
             {!ENDPOINT && <p className="form-note">No email service is configured, so this form opens your email app (mailto). See README to connect one.</p>}
           </div>
 

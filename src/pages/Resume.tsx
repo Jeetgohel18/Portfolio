@@ -2,6 +2,7 @@ import { Download } from 'lucide-react';
 import { education, experience, personal, skills, tools } from '../data/personal';
 import { asset } from '../lib/assets';
 import { Reveal } from '../components/Reveal';
+import { Portrait } from '../components/Portrait';
 import { useDocTitle } from '../hooks/useDocTitle';
 
 export default function Resume() {
@@ -10,6 +11,7 @@ export default function Resume() {
     <main id="main" className="page resume">
       <div className="wrap">
         <header className="page-head">
+          <Portrait className="sm" />
           <p className="eyebrow">Resume</p>
           <h1>{personal.name}</h1>
           <p className="page-sub">{personal.title} · {personal.location}</p>

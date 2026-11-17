@@ -50,11 +50,11 @@ function Row({ p, i }: { p: Project; i: number }) {
 
 export function SelectedWork() {
   return (
-    <section id="work" className="section work">
+    <section id="work" className="section stack-top work">
       <div className="wrap">
         <Reveal className="sec-head">
           <p className="eyebrow">02 — Selected work</p>
-          <h2>Selected <em>work</em></h2>
+          <h2>Selected <em>work</em> <sup aria-label="six projects">(06)</sup></h2>
           <p className="sec-note">Six slots across the disciplines I work in. Currently <strong>sample placeholders</strong> — real projects replace them via <code>src/data/projects.ts</code>.</p>
         </Reveal>
         {projects.map((p, i) => <Row key={p.slug} p={p} i={i} />)}

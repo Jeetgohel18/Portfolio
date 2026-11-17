@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from 'react';
 import { ArrowDown, Moon, Sun } from 'lucide-react';
 import { personal } from '../data/personal';
 import { currentSeason, formatHour, phaseName, seasons, seasonLabel, skyState, type Season } from '../lib/sky';
@@ -7,6 +7,43 @@ import { useReducedMotion } from '../hooks/useReducedMotion';
 const CX = 50, CY = 80, RX = 42, RY = 66; // arc geometry, % of stage
 
 const rand = (n: number) => { const x = Math.sin(n * 9301 + 49297) * 233280; return x - Math.floor(x); };
+const STARS = Array.from({ length: 70 }, (_, i) => ({ x: rand(i + 1) * 100, y: rand(i + 101) * 62, s: 1 + rand(i + 201) * 2, d: rand(i + 301) * 4 }));
+const BITS = Array.from({ length: 22 }, (_, i) => ({ x: rand(i + 7) * 100, d: rand(i + 17) * -14, t: 9 + rand(i + 27) * 10, s: 0.6 + rand(i + 37) * 0.9, w: (rand(i + 47) - 0.5) * 160 }));
+
+// Static layers are memoised so dragging the sun only re-renders what actually changes.
+const Stars = memo(function Stars() {
+  return (
+    <div className="sky-stars" aria-hidden="true">
+      {STARS.map((s, i) => <i key={i} style={{ left: `${s.x}%`, top: `${s.y}%`, width: s.s, height: s.s, animationDelay: `${s.d}s` }} />)}
+    </div>
+  );
+});
+const Particles = memo(function Particles({ season }: { season: Season }) {
+  return (
+    <div className={`particles p-${season}`} aria-hidden="true">
+      {BITS.map((b, i) => <i key={`${season}-${i}`} style={{ left: `${b.x}%`, animationDelay: `${b.d}s`, animationDuration: `${b.t}s`, '--s': b.s, '--w': `${b.w}px` } as CSSProperties} />)}
+    </div>
+  );
+});
+const Landscape = memo(function Landscape() {
+  return (
+    <>
+      <svg className="land back" viewBox="0 0 1440 400" preserveAspectRatio="none" aria-hidden="true"><path d="M0 210 C180 120 340 190 520 150 S860 70 1040 140 S1340 170 1440 120 V400 H0Z" fill="var(--hill1)" /></svg>
+      <svg className="land mid" viewBox="0 0 1440 400" preserveAspectRatio="none" aria-hidden="true"><path d="M0 250 C220 190 380 270 600 220 S980 170 1160 230 S1380 240 1440 200 V400 H0Z" fill="var(--hill2)" /></svg>
+      <svg className="trees" viewBox="0 0 1440 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+        {[[170, 190, 1], [300, 210, 0.8], [1090, 195, 1.1], [1240, 215, 0.85], [1350, 200, 0.7]].map(([x, y, s], i) => (
+          <g key={i} transform={`translate(${x} ${y}) scale(${s})`}>
+            <rect x="-4" y="0" width="8" height="70" fill="var(--trunk)" />
+            <path d="M0 22 L-22 4 M0 34 L24 12" stroke="var(--trunk)" strokeWidth="4" strokeLinecap="round" />
+            <circle className="leaf" cx="0" cy="-8" r="34" /><circle className="leaf" cx="-26" cy="14" r="22" /><circle className="leaf" cx="28" cy="10" r="24" />
+          </g>
+        ))}
+      </svg>
+      <svg className="land front" viewBox="0 0 1440 400" preserveAspectRatio="none" aria-hidden="true"><path d="M0 300 C260 250 480 330 760 290 S1180 250 1440 296 V400 H0Z" fill="var(--hill3)" /></svg>
+    </>
+  );
+});
+
 const PRESETS: { label: string; hour: number }[] = [
   { label: 'Dawn', hour: 6.3 }, { label: 'Day', hour: 12.5 }, { label: 'Dusk', hour: 18.4 }, { label: 'Night', hour: 23.2 },
 ];
@@ -19,16 +56,19 @@ export function SkyHero({ ready, onTone }: { ready: boolean; onTone: (dark: bool
   const [dragging, setDragging] = useState(false);
   const [touched, setTouched] = useState(false);
   const raf = useRef(0);
+  const root = useRef<HTMLElement>(null);
+  const [offscreen, setOffscreen] = useState(false);
+  useEffect(() => {
+    const el = root.current;
+    if (!el || !('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver(([e]) => setOffscreen(!e.isIntersecting), { threshold: 0 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   const sky = useMemo(() => skyState(hour, season), [hour, season]);
   useEffect(() => { onTone(sky.dark); }, [sky.dark, onTone]);
 
-  const stars = useMemo(() => Array.from({ length: 70 }, (_, i) => ({
-    x: rand(i + 1) * 100, y: rand(i + 101) * 62, s: 1 + rand(i + 201) * 2, d: rand(i + 301) * 4,
-  })), []);
-  const bits = useMemo(() => Array.from({ length: 22 }, (_, i) => ({
-    x: rand(i + 7) * 100, d: rand(i + 17) * -14, t: 9 + rand(i + 27) * 10, s: 0.6 + rand(i + 37) * 0.9, w: (rand(i + 47) - 0.5) * 160,
-  })), []);
 
   // Convert pointer to hour. `isMoon`: the grabbed orb sits on the opposite side of the cycle.
   const pointerToHour = useCallback((e: { clientX: number; clientY: number }, isMoon: boolean) => {
@@ -65,9 +105,17 @@ export function SkyHero({ ready, onTone }: { ready: boolean; onTone: (dark: bool
     setDragging(true); setTouched(true);
     setHour(pointerToHour(e, moon));
   };
+  const pending = useRef<number | null>(null);
   const onMove = (moon: boolean) => (e: PointerEvent<HTMLButtonElement>) => {
     if (!dragging) return;
-    setHour(pointerToHour(e, moon));
+    const h = pointerToHour(e, moon);
+    if (pending.current === null) {
+      pending.current = requestAnimationFrame(() => { pending.current = null; setHour(h); });
+    } else {
+      // keep only the latest sample per frame
+      cancelAnimationFrame(pending.current);
+      pending.current = requestAnimationFrame(() => { pending.current = null; setHour(h); });
+    }
   };
   const onUp = () => setDragging(false);
   const onKey = (e: KeyboardEvent) => {
@@ -92,15 +140,11 @@ export function SkyHero({ ready, onTone }: { ready: boolean; onTone: (dark: bool
   } as CSSProperties;
 
   return (
-    <section id="top" className={`sky ${sky.dark ? 'is-dark' : 'is-light'} season-${season} ${dragging ? 'dragging' : ''} ${ready ? 'ready' : ''}`} style={style} aria-label="Introduction">
+    <section id="top" ref={root} className={`sky ${sky.dark ? 'is-dark' : 'is-light'} season-${season} ${dragging ? 'dragging' : ''} ${ready ? 'ready' : ''} ${offscreen ? 'paused' : ''}`} style={style} aria-label="Introduction">
       <div className="sky-stage" ref={stage}>
         <div className="sky-bg" />
         <div className="sky-glow" />
-        <div className="sky-stars" aria-hidden="true">
-          {stars.map((s, i) => (
-            <i key={i} style={{ left: `${s.x}%`, top: `${s.y}%`, width: s.s, height: s.s, animationDelay: `${s.d}s` }} />
-          ))}
-        </div>
+        <Stars />
         <div className="sky-clouds" aria-hidden="true">
           <div className="cloud c1" /><div className="cloud c2" /><div className="cloud c3" />
         </div>
@@ -128,38 +172,12 @@ export function SkyHero({ ready, onTone }: { ready: boolean; onTone: (dark: bool
           onPointerDown={onDown(true)} onPointerMove={onMove(true)} onPointerUp={onUp} onPointerCancel={onUp} onKeyDown={onKey}
         ><span className="orb-core" /></button>
 
-        <div className={`drag-hint ${touched ? 'gone' : ''}`} style={sunOn ? { left: sunPos.left, top: sunPos.top } : { left: moonPos.left, top: moonPos.top }} aria-hidden="true">
+        <div className={`drag-hint ${touched ? 'gone' : ''}`} style={{ left: `clamp(64px, ${sunOn ? sunPos.left : moonPos.left}, calc(100% - 64px))`, top: sunOn ? sunPos.top : moonPos.top }} aria-hidden="true">
           <span>Drag me</span>
         </div>
 
-        {/* Seasonal particles */}
-        <div className={`particles p-${season}`} aria-hidden="true">
-          {bits.map((b, i) => (
-            <i key={`${season}-${i}`} style={{ left: `${b.x}%`, animationDelay: `${b.d}s`, animationDuration: `${b.t}s`, '--s': b.s, '--w': `${b.w}px` } as CSSProperties} />
-          ))}
-        </div>
-
-        {/* Landscape */}
-        <svg className="land back" viewBox="0 0 1440 400" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M0 210 C180 120 340 190 520 150 S860 70 1040 140 S1340 170 1440 120 V400 H0Z" fill="var(--hill1)" />
-        </svg>
-        <svg className="land mid" viewBox="0 0 1440 400" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M0 250 C220 190 380 270 600 220 S980 170 1160 230 S1380 240 1440 200 V400 H0Z" fill="var(--hill2)" />
-        </svg>
-        <svg className="trees" viewBox="0 0 1440 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
-          {[[170, 190, 1], [300, 210, 0.8], [1090, 195, 1.1], [1240, 215, 0.85], [1350, 200, 0.7]].map(([x, y, s], i) => (
-            <g key={i} transform={`translate(${x} ${y}) scale(${s})`}>
-              <rect x="-4" y="0" width="8" height="70" fill="var(--trunk)" />
-              <path d="M0 22 L-22 4 M0 34 L24 12" stroke="var(--trunk)" strokeWidth="4" strokeLinecap="round" />
-              <circle className="leaf" cx="0" cy="-8" r="34" />
-              <circle className="leaf" cx="-26" cy="14" r="22" />
-              <circle className="leaf" cx="28" cy="10" r="24" />
-            </g>
-          ))}
-        </svg>
-        <svg className="land front" viewBox="0 0 1440 400" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M0 300 C260 250 480 330 760 290 S1180 250 1440 296 V400 H0Z" fill="var(--hill3)" />
-        </svg>
+        <Particles season={season} />
+        <Landscape />
       </div>
 
       {/* Copy */}
@@ -187,7 +205,7 @@ export function SkyHero({ ready, onTone }: { ready: boolean; onTone: (dark: bool
             <button key={s} type="button" role="radio" aria-checked={season === s} className={season === s ? 'on' : ''} onClick={() => { setSeason(s); setTouched(true); }}>{seasonLabel(s)}</button>
           ))}
         </div>
-        <a className="sky-scroll" href="#work" onClick={(e) => { e.preventDefault(); document.getElementById('intro')?.scrollIntoView({ behavior: 'smooth' }); }} aria-label="Scroll to content"><ArrowDown size={18} /></a>
+        <a className="sky-scroll" href="#intro" onClick={(e) => { e.preventDefault(); document.getElementById('intro')?.scrollIntoView({ behavior: 'smooth' }); }} aria-label="Scroll to content"><ArrowDown size={18} /></a>
       </div>
     </section>
   );

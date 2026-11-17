@@ -24,7 +24,7 @@ export function MotionLab() {
     if (on) v.play().catch(() => undefined); else { v.pause(); v.currentTime = 0; }
   };
   return (
-    <section id="motion" className="section motion">
+    <section id="motion" className="section stack-top motion">
       <div className="wrap">
         <Reveal className="sec-head light">
           <p className="eyebrow">05 — Motion &amp; experiments</p>

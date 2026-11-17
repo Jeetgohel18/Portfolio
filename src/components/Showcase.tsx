@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Laptop, Smartphone, Tablet } from 'lucide-react';
-import { BrowserFrame, DashScreen, MobileScreen, PhoneFrame, SampleTag, WebScreen } from './Art';
+import { BrowserFrame, DashScreen, MobileScreen, PhoneFrame, SampleTag, ScreenImg, WebScreen } from './Art';
+import { showcase } from '../data/showcase';
 import { Reveal } from './Reveal';
 
 const P: [string, string, string] = ['#14130f', '#f3efe6', '#c7f23b'];
@@ -13,7 +14,7 @@ export function Showcase() {
   const [vp, setVp] = useState<keyof typeof sizes>('desktop');
   const [lens, setLens] = useState({ x: 62, y: 38, on: false });
   return (
-    <section id="interfaces" className="section showcase">
+    <section id="interfaces" className="section stack-top showcase">
       <div className="wrap">
         <Reveal className="sec-head light">
           <p className="eyebrow">03 — Interfaces</p>
@@ -27,17 +28,17 @@ export function Showcase() {
             onMouseMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); setLens({ x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100, on: true }); }}
             onMouseLeave={() => setLens((l) => ({ ...l, on: false }))}
           >
-            <BrowserFrame url="app.your-product.com"><DashScreen p={P} /></BrowserFrame>
+            <BrowserFrame url="app.your-product.com"><ScreenImg src={showcase.dashboard} alt="Dashboard screenshot" fallback={<DashScreen p={P} />} /></BrowserFrame>
             <div className={`lens ${lens.on ? 'on' : ''}`} style={{ left: `${lens.x}%`, top: `${lens.y}%` }} aria-hidden="true">
               <div className="lens-inner" style={{ transformOrigin: `${lens.x}% ${lens.y}%` }}>
                 <div className="lens-zoom" style={{ transform: `scale(2.4) translate(${50 - lens.x}%, ${50 - lens.y}%)`, transformOrigin: '50% 50%' }}>
-                  <DashScreen p={P} />
+                  <ScreenImg src={showcase.dashboard} alt="" fallback={<DashScreen p={P} />} />
                 </div>
               </div>
               <span>Close-up</span>
             </div>
           </div>
-          <PhoneFrame className="show-phone"><MobileScreen p={P3} variant={0} /></PhoneFrame>
+          <PhoneFrame className="show-phone"><ScreenImg src={showcase.mobile[0]} alt="Mobile screenshot" fallback={<MobileScreen p={P3} variant={0} />} /></PhoneFrame>
           <p className="show-cap">Hover the dashboard — interface close-up lens.</p>
         </Reveal>
 
@@ -52,16 +53,16 @@ export function Showcase() {
             </div>
             <div className="vp-stage">
               <div className="vp-frame" style={{ width: `${sizes[vp].w}%` }}>
-                <BrowserFrame url="your-project.com"><WebScreen p={P2} /></BrowserFrame>
+                <BrowserFrame url="your-project.com"><ScreenImg src={showcase.website} alt="Website screenshot" fallback={<WebScreen p={P2} />} /></BrowserFrame>
               </div>
             </div>
           </Reveal>
           <Reveal delay={120} className="show-card show-mobiles">
             <p className="eyebrow">Mobile flows</p>
             <div className="mob-row">
-              <PhoneFrame><MobileScreen p={P3} variant={0} /></PhoneFrame>
-              <PhoneFrame><MobileScreen p={P3} variant={1} /></PhoneFrame>
-              <PhoneFrame><MobileScreen p={P3} variant={2} /></PhoneFrame>
+              {[0, 1, 2].map((i) => (
+                <PhoneFrame key={i}><ScreenImg src={showcase.mobile[i]} alt={`Mobile screenshot ${i + 1}`} fallback={<MobileScreen p={P3} variant={i} />} /></PhoneFrame>
+              ))}
             </div>
           </Reveal>
         </div>

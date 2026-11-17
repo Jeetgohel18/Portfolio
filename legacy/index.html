@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CODEALPHA TASK1</title>
+	<link rel="stylesheet" href="style.css">
+	<script src="https://kit.fontawesome.com/bc8168d816.js" crossorigin="anonymous"></script>
+	<script src="script.js"></script>
+</head>
+<body>
+	<div id="header">
+		<div class="container">
+			<nav>
+				<a href="#"><img src="images/logo.png" class="logo"></a>
+				<ul id="sidemenu">
+					<li><a href="#header">Home</a></li>
+					<li><a href="#about">About</a></li>
+					<li><a href="#services">Service</a></li>
+					<li><a href="#portfolio">Portfolio</a></li>
+					<li><a href="#contact">Contact</a></li>
+					<i class="fa-solid fa-circle-xmark" onclick="closemenu()"></i>
+				</ul>
+				<i class="fa-solid fa-bars" onclick="openmenu()"></i>
+			</nav>
+			<div class="header-text">
+				<p>Front-End Developer</p>
+				<h1>Hi, I'm<br><span>Jeet Gohel</span></h1>
+			</div>
+		</div>
+	</div>
+	<!-- About me -->
+	<div id="about">
+		<div class="container">
+			<div class="row">
+				<div class="about-col-1">
+					<img src="images/user.png">
+				</div>
+				<div class="about-col-2">
+					<h1 class="sub-title">About Me</h1>
+					<p>My self Jeet Gohel. I am currently studying at Shantial Shah Engineering College, Bhavnagar. Driven and adaptable professional with a passion for web development. Proven track record of delivering results through my skills which I mentioned in skills section. Committed to continuous learning and growth.
+					Excited to leverage expertise in my key strengths to contribute effectively in a dynamic and collaborative work environment.</p>
+					<div class="tab-titles">
+						<p class="tab-links active-link" onclick="opentab('skills')">Skills</p>
+						<p class="tab-links" onclick="opentab('experience')">Experience</p>
+						<p class="tab-links" onclick="opentab('education')">Education</p>
+					</div>
+					<div class="tab-contents active-tab" id="skills">
+						<ul>
+							<li><span>Web Development</span><br>Responsive Web Design</li>
+							<li><span>Graphic Design</span><br>Post/Logo Designer</li>
+							<li><span>3D Animation</span><br>3D Animation with Blender</li>
+							<li><span>Shopify</span><br>E-commerce Store Design</li>
+							<li><span>Blender</span><br>3D Modeling, 3D Animation, 2D Animation</li>
+						</ul>
+					</div>
+					<div class="tab-contents" id="experience">
+						<ul>
+							<li><span>Shopify</span><br>1 Year of experience in Shopify App with familiar with all Shopify theme and features.</li>
+							<li><span>Web Development</span><br>Freelancer</li>
+							<li><span>Graphic Design</span><br>Freelancer</li>
+							<li><span>3D Animation</span><br>Freelancer</li>
+						</ul>
+					</div>
+					<div class="tab-contents" id="education">
+						<ul>
+							<li><span>12TH PASS</span><br>12TH PASS With 83%<br>2021, St. Xavier High School, Bhavnagar</li>
+							<li><span>Bachelor Of Engineering</span><br>Information Technology<br>2021-2025, Shantial Shah Engineering College, Bhavnagar</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Services -->
+	<div id="services">
+		<div class="container">
+			<h1 class="sub-title">My Services</h1>
+			<div class="services-list">
+				<div>
+					<i class="fa-solid fa-code"></i>
+					<h2>Shopify Development</h2>
+					<p>Elevate your online presence with our bespoke Shopify web development services. We specialize in creating visually stunning and user-friendly e-commerce platforms tailored to your unique brand identity. From seamless navigation to secure payment gateways, we ensure a flawless shopping experience for your customers. </p>
+					<a href="#">Learn more</a>
+				</div>
+				<div>
+					<i class="fa-solid fa-compass-drafting"></i>
+					<h2>Graphic Design</h2>
+					<p>Welcome to a visual journey that transcends boundaries and captivates hearts. Our graphic design portfolio is a testament to the power of creativity harnessed to tell unique stories. With an unwavering commitment to aesthetics and innovation, we breathe life into brands through compelling visuals. </p>
+					<a href="#">Learn more</a>
+				</div>
+				<div>
+					<i class="fa-brands fa-unity"></i>
+					<h2>Blender</h2>
+					<p>Dive into a world of limitless creativity with our Blender expertise. As seasoned masters of this powerful 3D software, we sculpt imagination into tangible digital art. Our portfolio showcases a symphony of visual wonders—from stunning animations and cinematic effects to intricately modeled 3D assets. </p>
+					<a href="#">Learn more</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Portfolio -->
+	<div id="portfolio">
+		<div class="container">
+			<h1 class="sub-title">My Work</h1>
+			<div class="work-list">
+				<div class="work">
+					<img src="images/work-1.png" alt="">
+					<div class="layer">
+						<h3>Shopify</h3>
+						<p> I am passionate about transforming ideas into thriving online ventures through Shopify web development. With a keen eye for design and a commitment to seamless functionality, I specialize in creating unique and user-friendly e-commerce experiences. From visually appealing storefronts that capture attention to robust backend solutions ensuring smooth transactions, my Shopify projects are a fusion of creativity and functionality. </p>
+						<a href="#"><i class="fa-solid fa-link"></i></a>
+					</div>
+				</div>
+				<div class="work">
+					<img src="images/work-2.png" alt="">
+					<div class="layer">
+						<h3>Blender</h3>
+						<p>Welcome to my realm of 3D magic, where creativity knows no bounds, and Blender is the wand in my hand. As a passionate artist and Blender enthusiast, I breathe life into ideas, transforming them into captivating visual experiences. From mesmerizing animations that dance on the screen to meticulously crafted 3D models that defy reality, my portfolio is a testament to the boundless possibilities that Blender unlocks. </p>
+						<a href="#"><i class="fa-solid fa-link"></i></a>
+					</div>
+				</div>
+				<div class="work">
+					<img src="images/work-3.png" alt="">
+					<div class="layer">
+						<h3>Graphic Design</h3>
+						<p> Step into a visual odyssey where pixels come to life, and every graphic tells a unique tale. As a passionate graphic designer, I specialize in weaving together creativity and strategy to breathe personality into brands. From captivating logos that echo your essence to eye-catching marketing collateral that leaves a lasting impression, my work is a canvas where imagination meets intention. </p>
+						<a href="#"><i class="fa-solid fa-link"></i></a>
+					</div>
+				</div>
+			</div>
+			<a href="#" class="btn">See more</a>
+		</div>
+	</div>
+	<!-- Contact -->
+	<div id="contact">
+		<div class="container">
+			<div class="row">
+				<div class="contact-left">
+					<h1 class="sub-title">Contact Me</h1>
+					<p><i class="fa-solid fa-paper-plane"></i>goheljeet563@gmail.com</p>
+					<p><i class="fa-solid fa-phone"></i>+91-8780038847</p>
+					<div class="social-icons">
+						<a href=""><i class="fa-brands fa-instagram"></i></a>
+						<a href=""><i class="fa-brands fa-linkedin"></i></a>
+						<a href=""><i class="fa-brands fa-github"></i></a>
+					</div>
+					<a href="images/JEET GOHEL.pdf" download class="btn btn2">Download CV</a>
+				</div>
+				<div class="contact-right">
+					<form action="" name="submit-to-google-sheet">
+						<input type="text" name="Name" placeholder="Your Name" required>
+						<input type="email" name="Email" placeholder="Your Email" required>
+						<textarea name="Message" rows="6" placeholder="Your Message"></textarea>
+						<button type="submit" class="btn btn2">Submit</button>
+					</form>
+					<span id="msg"></span>
+				</div>
+			</div>
+		</div>
+		<div class="copyright">
+			<p>Copyright <i class="fa-regular fa-copyright"></i> Jeet, Made with Visual Studio Code</p>
+		</div>
+	</div>
+
+	<script>
+		var sidemenu = document.getElementById("sidemenu");
+
+		function openmenu(){
+			sidemenu.style.right = "0";
+		}
+		function closemenu(){
+			sidemenu.style.right = "-200px";
+		}
+	</script>
+	<script>
+		const scriptURL = 'https://script.google.com/macros/s/AKfycbzFEgACPYy0ExpCbWbOQ2EW4Ko595CoEVf_K_497debVRb6OTccGA6n0KFTnTErCeMq/exec'
+		const form = document.forms['submit-to-google-sheet']
+		const msg = document.getElementById("msg")
+	  
+		form.addEventListener('submit', e => {
+		  e.preventDefault()
+		  fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+			.then(response => {
+				msg.innerHTML = "Message sent successfully"
+				setTimeout(function(){
+					msg.innerHTML = ""
+				},5000)
+				form.reset()
+			})
+			.catch(error => console.error('Error!', error.message))
+		})
+	  </script>
+</body>
+</html>

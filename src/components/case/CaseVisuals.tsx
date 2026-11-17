@@ -136,14 +136,14 @@ export function PrototypeEmbed({ url, video, title }: { url?: string; video?: st
     return (
       <div className="cs-proto">
         {live ? <iframe src={url} title={`${title} prototype`} allowFullScreen /> : (
-          <button onClick={() => setLive(true)} className="proto-start"><Play size={22} />Load interactive prototype</button>
+          <button onClick={() => setLive(true)} className="proto-start"><Play />Load interactive prototype</button>
         )}
       </div>
     );
   }
   return (
     <div className="cs-proto empty">
-      <div><Play size={22} /><b>Interactive prototype placeholder</b><span>Set <code>embedUrl</code> (Figma / Framer) or <code>video</code> in caseStudies.ts</span></div>
+      <div><Play /><b>Interactive prototype placeholder</b><span>Set <code>embedUrl</code> (Figma / Framer) or <code>video</code> in caseStudies.ts</span></div>
     </div>
   );
 }

@@ -27,9 +27,9 @@ const KEYS: [number, string, string, string][] = [
 ];
 
 const SEASON = {
-  spring: { tint: '#ffc9dc', amt: 0.1, hill: ['#8fc27a', '#6ea867', '#4c8c58'], label: 'Spring' },
-  summer: { tint: '#ffe28a', amt: 0.1, hill: ['#6bb255', '#4c973f', '#357a38'], label: 'Summer' },
-  autumn: { tint: '#ff9a52', amt: 0.14, hill: ['#d19a4a', '#b9722f', '#8f4f26'], label: 'Autumn' },
+  spring: { tint: '#ffc9dc', amt: 0.1, hill: ['#a8cf8c', '#86b873', '#5e9a60'], label: 'Spring' },
+  summer: { tint: '#ffe28a', amt: 0.1, hill: ['#86b86c', '#62995a', '#43803f'], label: 'Summer' },
+  autumn: { tint: '#ff9a52', amt: 0.14, hill: ['#dd9f55', '#c27536', '#97502a'], label: 'Autumn' },
   winter: { tint: '#d7e8ff', amt: 0.16, hill: ['#eef3fa', '#d3deec', '#b4c4da'], label: 'Winter' },
 } as const;
 

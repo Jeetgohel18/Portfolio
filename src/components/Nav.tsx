@@ -61,7 +61,7 @@ export function Nav({ tone }: { tone: 'light' | 'dark' }) {
         )}
       </nav>
       <button ref={toggle} className="nav-toggle" aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? 'Close menu' : 'Open menu'} onClick={() => setOpen((o) => !o)}>
-        {open ? <X size={20} /> : <Menu size={20} />}
+        {open ? <X /> : <Menu />}
       </button>
       <div id="mobile-menu" className={`mobile-menu ${open ? 'open' : ''}`} inert={!open}>
         {navigation.map((n, i) => (

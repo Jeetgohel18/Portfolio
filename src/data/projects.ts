@@ -38,7 +38,7 @@ export const projects: Project[] = [
     year: 'Year — to be added',
     platform: 'Web · Desktop, tablet, mobile',
     tools: ['Figma', 'Framer', 'Photoshop'],
-    palette: ['#e9e2d3', '#14130f', '#ff5a24'],
+    palette: ['#f1e4c8', '#1f1a17', '#3b47ff'],
     placeholder: true,
   },
   {
@@ -51,7 +51,7 @@ export const projects: Project[] = [
     year: 'Year — to be added',
     platform: 'iOS · Android',
     tools: ['Figma', 'Illustrator'],
-    palette: ['#1d2a4a', '#f3efe6', '#7bd6c4'],
+    palette: ['#cdbdff', '#1f1a17', '#ff6a4a'],
     placeholder: true,
   },
   {
@@ -64,7 +64,7 @@ export const projects: Project[] = [
     year: 'Year — to be added',
     platform: 'Web app · Desktop first',
     tools: ['Figma'],
-    palette: ['#14130f', '#f3efe6', '#c7f23b'],
+    palette: ['#1e1416', '#f6f0e4', '#ffd75e'],
     placeholder: true,
   },
   {
@@ -77,7 +77,7 @@ export const projects: Project[] = [
     year: 'Year — to be added',
     platform: 'Web · Mobile',
     tools: ['Figma', 'Claude AI', 'ChatGPT'],
-    palette: ['#f1d9cf', '#2a1710', '#d6336c'],
+    palette: ['#ffd75e', '#1f1a17', '#3b47ff'],
     placeholder: true,
   },
   {
@@ -90,7 +90,7 @@ export const projects: Project[] = [
     year: 'Year — to be added',
     platform: 'Print · Digital',
     tools: ['Illustrator', 'Affinity', 'Photoshop'],
-    palette: ['#2b3a2f', '#f3efe6', '#f2b84b'],
+    palette: ['#ff6a4a', '#1f1a17', '#fffaf1'],
     placeholder: true,
   },
   {
@@ -103,7 +103,7 @@ export const projects: Project[] = [
     year: 'Year — to be added',
     platform: 'Social · Print',
     tools: ['Photoshop', 'Illustrator', 'Affinity'],
-    palette: ['#ff5a24', '#14130f', '#f3efe6'],
+    palette: ['#bfe6cf', '#1f1a17', '#ff6a4a'],
     placeholder: true,
   },
 ];

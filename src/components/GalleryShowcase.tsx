@@ -3,6 +3,7 @@ import { gallery, galleryCategories, type GalleryCategory, type GalleryItem } fr
 import { BrandArt, CampaignArt, IllustrationArt, Img, PosterArt, SampleTag, SocialArt, TypeArt } from './Art';
 import { Lightbox } from './Lightbox';
 import { Reveal } from './Reveal';
+import { SectionTitle } from './SectionTitle';
 
 export function GalleryArt({ g }: { g: GalleryItem }) {
   return <Img src={g.src} alt={g.title} className="cover-img" fallback={<GalleryPlaceholder g={g} />} />;
@@ -33,7 +34,7 @@ export function GalleryShowcase() {
       <div className="wrap">
         <Reveal className="sec-head">
           <p className="eyebrow">04 — Graphic &amp; branding</p>
-          <h2>Visual <em>design</em></h2>
+          <SectionTitle text="Visual *design*" />
           <p className="sec-note">An editorial gallery for branding, social, posters, campaigns and explorations. Select any piece to view larger. <SampleTag /></p>
         </Reveal>
         <div className="filters" role="group" aria-label="Filter gallery">
@@ -41,16 +42,17 @@ export function GalleryShowcase() {
             <button key={c} aria-pressed={filter === c} className={filter === c ? 'on' : ''} onClick={() => setFilter(c)}>{c}</button>
           ))}
         </div>
-        <div className="gal-grid">
+        <div className="gal-grid" aria-live="polite">
           {items.map((g, i) => (
-            <button key={g.id} className={`gal-item s-${g.size}`} onClick={() => setIdx(i)} aria-label={`Open ${g.title}`}>
+            <button key={g.id} className={`gal-item s-${g.size} v${i % 4}`} data-cursor="Open" onClick={() => setIdx(i)} aria-label={`Open ${g.title}`}>
               <div className="gal-art"><GalleryArt g={g} /></div>
+              <span className="gal-no" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
               <span className="gal-cap"><b>{g.title}</b><i>{g.category}</i></span>
             </button>
           ))}
         </div>
       </div>
-      <Lightbox open={!!cur} onClose={close} onPrev={items.length > 1 ? prev : undefined} onNext={items.length > 1 ? next : undefined} title={cur?.title ?? ''} caption={cur ? `${cur.category} · sample placeholder` : ''}>
+      <Lightbox open={!!cur} onClose={close} onPrev={items.length > 1 ? prev : undefined} onNext={items.length > 1 ? next : undefined} title={cur?.title ?? ''} caption={cur ? `${cur.category} · sample placeholder` : ''} counter={cur && idx !== null ? `${String(idx + 1).padStart(2, '0')} / ${String(items.length).padStart(2, '0')}` : undefined}>
         {cur && <div className="lb-art"><GalleryArt g={cur} /></div>}
       </Lightbox>
     </section>

@@ -3,6 +3,7 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import { Loader } from './components/Loader';
 import { Nav } from './components/Nav';
 import { Footer } from './components/Footer';
+import { Cursor } from './components/fx/Cursor';
 import Home from './pages/Home';
 import CaseStudy from './pages/CaseStudy';
 import About from './pages/About';
@@ -39,10 +40,11 @@ export default function App() {
   const onHome = pathname === '/';
   return (
     <>
+      <Cursor />
       {!loaded && <Loader onDone={done} />}
       <Nav tone={onHome && dark ? 'dark' : 'light'} />
       <ScrollManager />
-      {sweep > 0 && <div key={sweep} className="page-curtain" aria-hidden="true" />}
+      {sweep > 0 && <div key={sweep} className="page-curtain" aria-hidden="true"><i /></div>}
       <div key={pathname.split('/')[1] + (pathname.split('/')[2] ?? '')} className="page-wrap">
         <Routes>
           <Route path="/" element={<Home ready={loaded} onTone={tone} />} />

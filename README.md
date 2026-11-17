@@ -36,6 +36,32 @@ public/          static assets (see below)
 legacy/          the previous static site, kept for reference
 ```
 
+## Design system (art direction)
+
+Everything lives in tokens at the top of `src/styles/base.css` — change a value there and the site follows.
+
+| Area | Choice |
+|---|---|
+| **Type** | **Bricolage Grotesque** (display — condensed, medium weight; `<em>` flips to *light + wide* for contrast) + **Instrument Sans** (text, labels, UI). Two families only. Both are **self-hosted** via `@fontsource-variable/*` (no Google Fonts request). |
+| **Palette** | Warm paper `#f6f0e4` / sand `#ebe3d1` / card `#fffaf1`, charcoal ink `#1f1a17`, burgundy-charcoal dark `#1e1416`. **Cobalt `#3b47ff`** = interactive accent; **coral `#ff6a4a`**, **butter `#ffd75e`**, **lavender `#cdbdff`**, **mint `#bfe6cf`** = objects, stickers, highlights. |
+| **Spacing** | 4 px scale `--s1…--s9`, section padding `--sec-y`, grid gap `--gap`, page margin `--gut`, max width `--maxw`. |
+| **Radii** | `--r-xs 8 · --r-sm 14 · --r-md 22 · --r-lg 32 · --r-pill`. |
+| **Icons** | Lucide only. One size/stroke rule in `src/styles/fx.css` (`.lucide { width: var(--icon); stroke-width: 1.75 }`); override `--icon` per context, never per icon. Custom animated `Arrow` for CTAs. |
+| **Sticker device** | 1.5 px ink outline + offset hard shadow (`--stk-bd`, `--stk-sh`) on key cards, dock and gallery tiles. |
+
+### Motion & 3D toolkit (`src/components/fx/`)
+| Component | What it does |
+|---|---|
+| `SplitText` | Character / word reveal for headlines. Markup: `*emphasis*`, `==highlight==`. Screen readers get plain text. |
+| `Magnetic` | Buttons lean toward the pointer (fine pointers only, travel clamped to ±10 px). |
+| `Cursor` | Labelled cursor bubble over anything with `data-cursor="Label"` (View / Drag / Open / Play / Zoom). Native cursor everywhere else. Off on touch + reduced motion. |
+| `Obj3D` | CSS-only 3D objects: `sphere` (incl. `metal`), `cube`, `torus`, `capsule`, `cone`, `spark`, `pencil`, `squiggle`, `plane`. No WebGL, no image files. Tones: coral · cobalt · butter · lavender · mint · ink · paper · metal. |
+| `PointerParallax` | Gives child objects pointer-based depth (`depth` prop). |
+| `burst()` | Confetti pop (spark click, copy-email, back-to-top). |
+| `accents.ts` | Which 3D objects accompany each project type. |
+
+Mobile: decorative objects marked `hide-m` are hidden under 760 px; the cursor, magnetic buttons and parallax never run on touch; everything honours `prefers-reduced-motion`.
+
 ## Replacing placeholders — exact files
 
 All image paths in data files are **relative to `public/`** (write `images/...`, not `/public/images/...`).
@@ -103,5 +129,5 @@ Static SPA. `vercel.json` and `public/_redirects` (Netlify) provide the fallback
 Set your real domain in `index.html` (`<link rel="canonical">`, Open Graph image) once it is known.
 
 ## Notes
-- Fonts load from Google Fonts (Instrument Serif, Inter Tight, JetBrains Mono) with system fallbacks.
+- Fonts are self-hosted (Bricolage Grotesque Variable + Instrument Sans Variable via `@fontsource-variable`).
 - `legacy/` holds the original static site; delete it whenever you like.

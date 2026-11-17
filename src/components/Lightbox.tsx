@@ -1,9 +1,9 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
-type Props = { open: boolean; onClose: () => void; onPrev?: () => void; onNext?: () => void; title: string; caption?: string; children: ReactNode };
+type Props = { open: boolean; onClose: () => void; onPrev?: () => void; onNext?: () => void; title: string; caption?: string; counter?: string; children: ReactNode };
 
-export function Lightbox({ open, onClose, onPrev, onNext, title, caption, children }: Props) {
+export function Lightbox({ open, onClose, onPrev, onNext, title, caption, counter, children }: Props) {
   const closeRef = useRef<HTMLButtonElement>(null);
   const lastFocus = useRef<HTMLElement | null>(null);
   const dialog = useRef<HTMLDivElement>(null);
@@ -37,12 +37,12 @@ export function Lightbox({ open, onClose, onPrev, onNext, title, caption, childr
   if (!open) return null;
   return (
     <div className="lightbox" ref={dialog} role="dialog" aria-modal="true" aria-label={title} onClick={onClose}>
-      <button ref={closeRef} className="lb-btn lb-close" onClick={onClose} aria-label="Close"><X size={20} /></button>
-      {onPrev && <button className="lb-btn lb-prev" onClick={(e) => { e.stopPropagation(); onPrev(); }} aria-label="Previous"><ChevronLeft size={22} /></button>}
-      {onNext && <button className="lb-btn lb-next" onClick={(e) => { e.stopPropagation(); onNext(); }} aria-label="Next"><ChevronRight size={22} /></button>}
+      <button ref={closeRef} className="lb-btn lb-close" onClick={onClose} aria-label="Close"><X /></button>
+      {onPrev && <button className="lb-btn lb-prev" onClick={(e) => { e.stopPropagation(); onPrev(); }} aria-label="Previous"><ChevronLeft /></button>}
+      {onNext && <button className="lb-btn lb-next" onClick={(e) => { e.stopPropagation(); onNext(); }} aria-label="Next"><ChevronRight /></button>}
       <figure className="lb-fig" onClick={(e) => e.stopPropagation()}>
         <div className="lb-stage">{children}</div>
-        <figcaption><strong>{title}</strong>{caption && <span>{caption}</span>}</figcaption>
+        <figcaption><strong>{counter && <em className="lb-count">{counter}</em>}{title}</strong>{caption && <span>{caption}</span>}</figcaption>
       </figure>
     </div>
   );

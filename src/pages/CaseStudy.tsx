@@ -1,11 +1,16 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, ArrowUpRight, ChevronDown } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ChevronDown } from 'lucide-react';
+import { Arrow } from '../components/fx/Arrow';
 import { getProject, projects, type Project } from '../data/projects';
 import { SECTION_TEMPLATE, getCaseStudy, type SectionContent, type SectionId, type SectionTemplate } from '../data/caseStudies';
 import { BrowserFrame, ProjectArt, SampleTag } from '../components/Art';
 import { Lightbox } from '../components/Lightbox';
 import { Reveal } from '../components/Reveal';
+import { SplitText } from '../components/fx/SplitText';
+import { Obj3D, type Tone } from '../components/fx/Obj3D';
+import { PointerParallax } from '../components/fx/PointerParallax';
+import { ACCENTS } from '../components/fx/accents';
 import { AffinityMap, Annotated, ComponentKit, DeviceStage, FinalStage, FlowDiagram, IaTree, ImageGrid, JourneyStrip, PrototypeEmbed, Screen, Swatches, TypeSpecimen, WireRow } from '../components/case/CaseVisuals';
 import { useActiveSection } from '../hooks/useActiveSection';
 import { useScrollProgress } from '../hooks/useScrollProgress';
@@ -13,6 +18,7 @@ import { useDocTitle } from '../hooks/useDocTitle';
 import { asset } from '../lib/assets';
 
 type Open = (src: string, alt: string, caption?: string) => void;
+const HEAD_TONES: Tone[] = ['butter', 'coral', 'lavender', 'mint', 'cobalt'];
 
 /** Sections where the heading sits beside the content. Others stack with large visuals beneath. */
 const SPLIT: SectionId[] = ['overview', 'problem', 'outcomes', 'learnings'];
@@ -50,7 +56,7 @@ function Learnings({ t, c }: { t: SectionTemplate; c?: SectionContent }) {
           <div key={tp.title} className={`acc-item ${isOpen ? 'open' : ''}`}>
             <h3>
               <button aria-expanded={isOpen} aria-controls={id} onClick={() => setOpen(isOpen ? null : tp.title)}>
-                <span><small>{String(i + 1).padStart(2, '0')}</small>{tp.title}</span><ChevronDown size={20} />
+                <span><small>{String(i + 1).padStart(2, '0')}</small>{tp.title}</span><ChevronDown />
               </button>
             </h3>
             <div id={id} role="region" aria-label={tp.title} className="acc-body"><div><p>{real ? real.body : tp.hint}</p>{!real && <small>Placeholder</small>}</div></div>
@@ -100,9 +106,12 @@ export default function CaseStudy() {
   const active = useActiveSection(sections.map((s) => s.id), [slug]);
   const open = useCallback<Open>((src, alt, caption) => setZoom({ src, alt, caption }), []);
   useEffect(() => {
-    // keep the active pill visible in the horizontally-scrolling mobile bar
+    // keep the active pill visible in the horizontally-scrolling mobile bar.
+    // Scroll only the bar itself (never the document) so we don't cancel an in-flight page scroll.
     if (!window.matchMedia('(max-width: 960px)').matches) return;
-    document.querySelector<HTMLElement>('.cs-nav a.active')?.scrollIntoView({ inline: 'center', block: 'nearest' });
+    const a = document.querySelector<HTMLElement>('.cs-nav a.active');
+    const bar = a?.closest('ol') as HTMLElement | null;
+    if (a && bar) bar.scrollTo({ left: a.offsetLeft - (bar.clientWidth - a.clientWidth) / 2, behavior: 'smooth' });
   }, [active]);
   useDocTitle(project ? `${project.title} — Case study` : 'Not found', project?.summary);
 
@@ -119,7 +128,7 @@ export default function CaseStudy() {
     <div className="cs" style={theme}>
       <div className="cs-progress" role="progressbar" aria-label="Reading progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}><i style={{ transform: `scaleX(${progress})` }} /></div>
       <nav className="cs-nav" aria-label="Case study sections">
-        <Link to="/#work" className="cs-back"><ArrowLeft size={14} /> All work</Link>
+        <Link to="/#work" className="cs-back"><ArrowLeft /> All work</Link>
         <ol>
           {sections.map((s) => (
             <li key={s.id}>
@@ -139,11 +148,16 @@ export default function CaseStudy() {
             return (
               <section key={s.id} id={s.id} className="cs-sec cs-intro" aria-labelledby="cs-title">
                 <p className="eyebrow">{project.category} {project.placeholder && <SampleTag>Sample case study</SampleTag>}</p>
-                <h1 id="cs-title">{project.title}</h1>
+                <SplitText as="h1" id="cs-title" by="word" stagger={90} text={project.title} />
                 <p className="cs-lead">{c?.lead ?? project.summary}</p>
-                <div className="cs-cover" style={{ background: project.palette[0] }}>
-                  <div className="cover-in"><ProjectArt kind={project.kind} p={project.palette} src={cover} alt={`${project.title} cover`} /></div>
-                  <span className="cover-chip">{project.platform}</span>
+                <div className="cs-cover-wrap">
+                  <div className="cs-cover" style={{ background: project.palette[0] }}>
+                    <div className="cover-in"><ProjectArt kind={project.kind} p={project.palette} src={cover} alt={`${project.title} cover`} /></div>
+                    <span className="cover-chip">{project.platform}</span>
+                  </div>
+                  <PointerParallax>
+                    {ACCENTS[project.kind].map((a, k) => <Obj3D key={k} kind={a.kind} tone={a.tone} size={a.size * 1.15} depth={14 + k * 10} float={7 + k * 2} spin={a.spin} rot={a.rot ?? 0} style={a.style} className="hide-m" />)}
+                  </PointerParallax>
                 </div>
                 <dl className="cs-meta">
                   <div><dt>Role</dt><dd>{project.role}</dd></div>
@@ -162,13 +176,13 @@ export default function CaseStudy() {
                 <div className="next-grid">
                   {[{ p: prev, dir: 'Previous', r: false }, { p: next, dir: 'Next', r: true }].map(({ p, dir, r }) => (
                     <Link key={dir} to={`/work/${p.slug}`} className={`next-card ${r ? 'r' : ''}`} style={{ '--nbg': p.palette[0], '--nfg': p.palette[1], '--nac': p.palette[2] } as React.CSSProperties}>
-                      <small>{!r && <ArrowLeft size={14} />} {dir} project {r && <ArrowRight size={14} />}</small>
+                      <small>{!r && <ArrowLeft />} {dir} project {r && <ArrowRight />}</small>
                       <b>{p.title}</b><span>{p.category}</span>
-                      <i className="next-chip" aria-hidden="true" />
+                      <Obj3D kind={ACCENTS[p.kind][0].kind} tone={ACCENTS[p.kind][0].tone} size={92} depth={0} float={7} spin style={r ? { left: '7%', top: '12%' } : { right: '7%', top: '12%' }} className="next-obj" />
                     </Link>
                   ))}
                 </div>
-                <Link to="/" className="btn-solid">Back to homepage <ArrowUpRight size={16} /></Link>
+                <Link to="/" className="btn-solid">Back to homepage <Arrow /></Link>
               </section>
             );
           }
@@ -177,8 +191,9 @@ export default function CaseStudy() {
           const head = (
             <Reveal className="cs-head">
               <span className="cs-num">{num(s.id)}</span>
-              <h2>{s.title}</h2>
+              <SplitText as="h2" by="word" text={s.title} />
               <p>{c?.lead ?? s.lead}</p>
+              <Obj3D kind={sections.indexOf(s) % 3 === 0 ? 'spark' : sections.indexOf(s) % 3 === 1 ? 'sphere' : 'capsule'} tone={HEAD_TONES[sections.indexOf(s) % HEAD_TONES.length]} size={sections.indexOf(s) % 3 === 2 ? 22 : 38} float={6} spin className="hide-m head-obj" depth={0} />
             </Reveal>
           );
           return (

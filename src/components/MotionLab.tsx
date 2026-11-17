@@ -5,6 +5,7 @@ import { asset } from '../lib/assets';
 import { MotionArt, SampleTag } from './Art';
 import { Lightbox } from './Lightbox';
 import { Reveal } from './Reveal';
+import { SectionTitle } from './SectionTitle';
 
 function Media({ m, full = false }: { m: MotionItem; full?: boolean }) {
   if (m.video) return <video src={asset(m.video)} poster={m.poster ? asset(m.poster) : undefined} muted loop playsInline autoPlay={full} controls={full} preload="metadata" />;
@@ -28,18 +29,20 @@ export function MotionLab() {
       <div className="wrap">
         <Reveal className="sec-head light">
           <p className="eyebrow">05 — Motion &amp; experiments</p>
-          <h2>Motion <em>lab</em></h2>
+          <SectionTitle text="Motion *lab*" />
           <p className="sec-note">Hover to preview, click to watch. Supports MP4, GIF, animated assets and interactive prototypes. <SampleTag /></p>
         </Reveal>
       </div>
       <div className="motion-rail" tabIndex={0} aria-label="Motion experiments, scroll horizontally">
         {motionItems.map((m, i) => (
-          <button key={m.id} className="motion-card" onClick={() => setOpen(i)} onMouseEnter={() => hover(m, true)} onMouseLeave={() => hover(m, false)} onFocus={() => hover(m, true)} onBlur={() => hover(m, false)} aria-label={`Play ${m.title}`}>
+          <button key={m.id} className="motion-card" data-cursor="Play" onClick={() => setOpen(i)} onMouseEnter={() => hover(m, true)} onMouseLeave={() => hover(m, false)} onFocus={() => hover(m, true)} onBlur={() => hover(m, false)} aria-label={`Play ${m.title}`}>
             <div className="motion-thumb">
               {m.video ? <video ref={(el) => { vids.current[m.id] = el; }} src={asset(m.video)} poster={m.poster ? asset(m.poster) : undefined} muted loop playsInline preload="metadata" /> : <Media m={m} />}
-              <span className="motion-play"><Play size={16} /></span>
+              <span className="motion-time" aria-hidden="true">0:0{(i % 5) + 3}</span>
+              <span className="motion-play"><Play /></span>
+              <span className="motion-scrub" aria-hidden="true"><i /></span>
             </div>
-            <span className="motion-meta"><b>{m.title}</b><i>{m.kind}</i></span>
+            <span className="motion-meta"><b>{m.title}</b><i className="label">{m.kind}</i></span>
           </button>
         ))}
       </div>

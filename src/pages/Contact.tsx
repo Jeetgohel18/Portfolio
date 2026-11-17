@@ -1,5 +1,11 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { ArrowUpRight, Check, Copy, MessageCircle } from 'lucide-react';
+import { Check, Copy, MessageCircle } from 'lucide-react';
+import { SplitText } from '../components/fx/SplitText';
+import { Obj3D } from '../components/fx/Obj3D';
+import { PointerParallax } from '../components/fx/PointerParallax';
+import { Magnetic } from '../components/fx/Magnetic';
+import { Arrow } from '../components/fx/Arrow';
+import { burst } from '../components/fx/burst';
 import { personal } from '../data/personal';
 import { useDocTitle } from '../hooks/useDocTitle';
 
@@ -69,10 +75,16 @@ export default function Contact() {
 
   return (
     <main id="main" className="page contact">
+      <PointerParallax>
+        <Obj3D kind="plane" tone="butter" size={74} depth={30} float={6} rot={-14} className="hide-m" style={{ right: '6%', top: '15%' }} />
+        <Obj3D kind="sphere" tone="coral" size={64} depth={24} float={8} className="hide-m" style={{ right: '27%', top: '9%' }} />
+        <Obj3D kind="cube" tone="cobalt" size={46} depth={34} float={7} spin className="hide-m" style={{ right: '4%', top: '52%' }} />
+        <Obj3D kind="spark" tone="lavender" size={50} depth={18} float={6} spin className="hide-m" style={{ right: '14%', top: '27%' }} />
+      </PointerParallax>
       <div className="wrap">
         <header className="page-head">
           <p className="eyebrow">Contact</p>
-          <h1>Write me a <em>letter</em>.</h1>
+          <SplitText as="h1" by="char" hover text="Write me a *letter*." />
           <p className="page-sub">Project, collaboration or just hello — open the envelope.</p>
         </header>
 
@@ -81,6 +93,9 @@ export default function Contact() {
             <div className="env">
               <div className="env-back" />
               <div className="env-flap" />
+              <div className="env-seal" aria-hidden="true"><span>JG</span></div>
+              <div className="env-addr" aria-hidden="true"><b>To: Jeet Gohel</b><span>Bhavnagar, Gujarat, India</span></div>
+              <div className="env-stamp" aria-hidden="true"><i /></div>
               <div className="paper" {...(!open ? { inert: true } : {})}>
                 <form id="contact-form" onSubmit={submit} noValidate aria-label="Contact form">
                   <p className="paper-date">Dear Jeet,</p>
@@ -98,7 +113,7 @@ export default function Contact() {
                     <span className="paper-sign">— {v.name.trim() || 'You'}</span>
                   </div>
                   <div className={`form-status ${status}`} role="status" aria-live="polite">
-                    {status === 'sent' && <><Check size={16} /> Thanks — your message was sent. I'll reply by email.</>}
+                    {status === 'sent' && <><Check /> Thanks — your message was sent. I'll reply by email.</>}
                     {status === 'mailto' && <>Your email app should have opened with the message prefilled. It is <strong>not sent</strong> until you press send there. Nothing opened? Email <a href={`mailto:${personal.email}`}>{personal.email}</a>.</>}
                     {status === 'error' && <>Something went wrong and the message was not sent. Please email <a href={`mailto:${personal.email}`}>{personal.email}</a> directly.</>}
                   </div>
@@ -106,22 +121,22 @@ export default function Contact() {
               </div>
               <div className="env-front" />
             </div>
-            <button ref={openBtn} className="btn-solid env-open" onClick={() => toggleEnvelope(!open)} aria-expanded={open} aria-controls="contact-form">{open ? 'Close envelope' : 'Open the envelope'}</button>
+            <Magnetic><button ref={openBtn} className="btn-solid env-open" onClick={() => toggleEnvelope(!open)} aria-expanded={open} aria-controls="contact-form">{open ? 'Close envelope' : 'Open the envelope'}</button></Magnetic>
             {!ENDPOINT && <p className="form-note">No email service is configured, so this form opens your email app (mailto). See README to connect one.</p>}
           </div>
 
           <aside className="contact-side">
             <p className="eyebrow">Or directly</p>
             <p className="big-mail">{personal.email}</p>
-            <button className="btn-line" onClick={copy}>{copied === 'ok' ? <><Check size={16} /> Copied</> : <><Copy size={16} /> Copy email</>}</button>
+            <Magnetic><button className="btn-line copy-ic" onClick={(e) => { copy(); const r = e.currentTarget.getBoundingClientRect(); burst(r.left + r.width / 2, r.top + 4, 14); }}>{copied === 'ok' ? <><Check /> Copied</> : <><Copy /> Copy email</>}</button></Magnetic>
             <span className="sr-only" role="status">{copied === 'ok' ? 'Email copied' : copied === 'fail' ? 'Copy failed' : ''}</span>
             {copied === 'fail' && <p className="form-note">Couldn't copy automatically — please select the address above.</p>}
             <ul className="contact-links">
-              <li><a href={personal.linkedin} target="_blank" rel="noreferrer">LinkedIn <ArrowUpRight size={16} /></a></li>
-              <li><a href={personal.behance} target="_blank" rel="noreferrer">Behance <ArrowUpRight size={16} /></a></li>
+              <li><a href={personal.linkedin} target="_blank" rel="noreferrer">LinkedIn <Arrow /></a></li>
+              <li><a href={personal.behance} target="_blank" rel="noreferrer">Behance <Arrow /></a></li>
               <li>{personal.whatsapp
-                ? <a href={personal.whatsapp} target="_blank" rel="noreferrer"><MessageCircle size={16} /> WhatsApp <ArrowUpRight size={16} /></a>
-                : <span className="disabled" aria-disabled="true"><MessageCircle size={16} /> WhatsApp — coming soon</span>}</li>
+                ? <a href={personal.whatsapp} target="_blank" rel="noreferrer"><MessageCircle /> WhatsApp <Arrow /></a>
+                : <span className="disabled" aria-disabled="true"><MessageCircle /> WhatsApp — coming soon</span>}</li>
             </ul>
             <p className="form-note">{personal.location}</p>
           </aside>

@@ -1,4 +1,8 @@
 import { Download } from 'lucide-react';
+import { SplitText } from '../components/fx/SplitText';
+import { Magnetic } from '../components/fx/Magnetic';
+import { Obj3D } from '../components/fx/Obj3D';
+import { PointerParallax } from '../components/fx/PointerParallax';
 import { education, experience, personal, skills, tools } from '../data/personal';
 import { asset } from '../lib/assets';
 import { Reveal } from '../components/Reveal';
@@ -9,13 +13,18 @@ export default function Resume() {
   useDocTitle('Resume');
   return (
     <main id="main" className="page resume">
+      <PointerParallax>
+        <Obj3D kind="pencil" tone="butter" size={40} depth={20} float={8} rot={-26} className="hide-m" style={{ right: '8%', top: '11%' }} />
+        <Obj3D kind="torus" tone="lavender" size={92} depth={26} float={9} spin className="hide-m" style={{ right: '19%', top: '18%' }} />
+        <Obj3D kind="spark" tone="coral" size={46} depth={16} float={6} spin className="hide-m" style={{ right: '5%', top: '27%' }} />
+      </PointerParallax>
       <div className="wrap">
         <header className="page-head">
           <Portrait className="sm" />
           <p className="eyebrow">Resume</p>
-          <h1>{personal.name}</h1>
+          <SplitText as="h1" by="char" hover text={personal.name} />
           <p className="page-sub">{personal.title} · {personal.location}</p>
-          <a className="btn-solid" href={asset(personal.resumePath)} download>Download resume (PDF) <Download size={16} /></a>
+          <Magnetic><a className="btn-solid" href={asset(personal.resumePath)} download>Download resume (PDF) <Download /></a></Magnetic>
         </header>
 
         <div className="res-grid">

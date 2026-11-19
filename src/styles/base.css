@@ -317,3 +317,4 @@ main { overflow-x: clip; }
 .nav { padding-right: calc(var(--gut) + var(--sbw, 0px)); }
 .lb-link { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; font: 700 12px var(--font-body); letter-spacing: .1em; text-transform: uppercase; color: var(--butter); border-bottom: 1.5px solid currentColor; padding-bottom: 2px; --icon: 16px; }
 .lb-link:hover { color: var(--paper); }
+button.nav-link { background: none; border: 0; color: inherit; cursor: pointer; padding-block: 0; }

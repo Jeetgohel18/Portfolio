@@ -61,6 +61,7 @@ export default function App() {
     setLoaded(true);
   }, []);
   const finishIntro = useCallback(() => setIntro(false), []);
+  const openGames = useCallback(() => setIntro(true), []);
   const skipAll = useCallback(() => { reveal(); finishIntro(); }, [reveal, finishIntro]);
   const tone = useCallback((d: boolean) => setDark(d), []);
 
@@ -81,7 +82,7 @@ export default function App() {
         </PlaygroundGuard>
       )}
       {!loaded && !intro && <Loader onDone={done} />}
-      <Nav tone={onHome && dark ? 'dark' : 'light'} />
+      <Nav tone={onHome && dark ? 'dark' : 'light'} onGames={openGames} />
       <ScrollManager />
       {sweep > 0 && <div key={sweep} className="page-curtain" aria-hidden="true"><i /></div>}
       <div key={pathname.split('/')[1] + (pathname.split('/')[2] ?? '')} className="page-wrap">

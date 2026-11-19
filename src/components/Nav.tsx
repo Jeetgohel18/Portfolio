@@ -6,7 +6,7 @@ import { personal } from '../data/personal';
 import { useActiveSection } from '../hooks/useActiveSection';
 import { lockScroll } from '../lib/scrollLock';
 
-export function Nav({ tone }: { tone: 'light' | 'dark' }) {
+export function Nav({ tone, onGames }: { tone: 'light' | 'dark'; onGames: () => void }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { pathname, hash } = useLocation();
@@ -61,6 +61,7 @@ export function Nav({ tone }: { tone: 'light' | 'dark' }) {
             </NavLink>
           ),
         )}
+        <button type="button" className="nav-link nav-games" onClick={onGames}><span data-text="Games">Games</span></button>
       </nav>
       <button ref={toggle} className="nav-toggle" aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? 'Close menu' : 'Open menu'} onClick={() => setOpen((o) => !o)}>
         {open ? <X /> : <Menu />}
@@ -76,6 +77,9 @@ export function Nav({ tone }: { tone: 'light' | 'dark' }) {
             <small>0{i + 1}</small>{n.label}
           </a>
         ))}
+        <a href="#games" style={{ transitionDelay: open ? `${120 + navigation.length * 70}ms` : '0ms' }} onClick={(e) => { e.preventDefault(); setOpen(false); onGames(); }}>
+          <small>0{navigation.length + 1}</small>Games
+        </a>
         <p>{personal.location}</p>
       </div>
     </header>

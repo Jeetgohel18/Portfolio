@@ -4,6 +4,7 @@ import { Menu, X } from 'lucide-react';
 import { navigation } from '../data/navigation';
 import { personal } from '../data/personal';
 import { useActiveSection } from '../hooks/useActiveSection';
+import { lockScroll } from '../lib/scrollLock';
 
 export function Nav({ tone }: { tone: 'light' | 'dark' }) {
   const [open, setOpen] = useState(false);
@@ -22,10 +23,11 @@ export function Nav({ tone }: { tone: 'light' | 'dark' }) {
   }, []);
   const toggle = useRef<HTMLButtonElement>(null);
   useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : '';
-    const k = (e: KeyboardEvent) => { if (e.key === 'Escape' && open) { setOpen(false); toggle.current?.focus(); } };
+    if (!open) return;
+    const unlock = lockScroll();
+    const k = (e: KeyboardEvent) => { if (e.key === 'Escape') { setOpen(false); toggle.current?.focus(); } };
     window.addEventListener('keydown', k);
-    return () => window.removeEventListener('keydown', k);
+    return () => { window.removeEventListener('keydown', k); unlock(); };
   }, [open]);
 
   const isActive = (to: string, sec?: string) => {

@@ -5,7 +5,7 @@ import { Arrow } from '../components/fx/Arrow';
 import { getProject, projects, type Project } from '../data/projects';
 import { SECTION_TEMPLATE, getCaseStudy, type SectionContent, type SectionId, type SectionTemplate } from '../data/caseStudies';
 import { BrowserFrame, ProjectArt, SampleTag } from '../components/Art';
-import { Lightbox } from '../components/Lightbox';
+import { Lightbox, PreviewImage } from '../components/Lightbox';
 import { Reveal } from '../components/Reveal';
 import { SplitText } from '../components/fx/SplitText';
 import { Obj3D, type Tone } from '../components/fx/Obj3D';
@@ -15,7 +15,6 @@ import { AffinityMap, Annotated, ComponentKit, DeviceStage, FinalStage, FlowDiag
 import { useActiveSection } from '../hooks/useActiveSection';
 import { useScrollProgress } from '../hooks/useScrollProgress';
 import { useDocTitle } from '../hooks/useDocTitle';
-import { asset } from '../lib/assets';
 
 type Open = (src: string, alt: string, caption?: string) => void;
 const HEAD_TONES: Tone[] = ['butter', 'coral', 'lavender', 'mint', 'cobalt'];
@@ -219,7 +218,7 @@ export default function CaseStudy() {
       </main>
 
       <Lightbox open={!!zoom} onClose={() => setZoom(null)} title={zoom?.alt ?? ''} caption={zoom?.caption}>
-        {zoom && (zoom.src ? <img src={asset(zoom.src)} alt={zoom.alt} /> : <div className="lb-art"><BrowserFrame><Screen project={project} /></BrowserFrame></div>)}
+        {zoom && (zoom.src ? <PreviewImage key={zoom.src} src={zoom.src} alt={zoom.alt} fallback={<div className="lb-art"><BrowserFrame><Screen project={project} /></BrowserFrame></div>} /> : <div className="lb-art"><BrowserFrame><Screen project={project} /></BrowserFrame></div>)}
       </Lightbox>
     </div>
   );

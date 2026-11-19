@@ -138,7 +138,6 @@ a:hover > .arr .a2, button:hover > .arr .a2, .arr-host:hover .arr .a2 { transfor
 .lucide { width: var(--icon); height: var(--icon); stroke-width: 1.75; flex: none; }
 .btn-solid, .btn-line, .btn-link { --icon: 18px; }
 .nav-toggle { --icon: 22px; }
-.lb-btn { --icon: 22px; }
 .footer-links, .eyebrow, .sample-tag { --icon: 14px; }
 .sky-readout, .sky-chips, .sky-seasons { --icon: 16px; }
 .work-more { --icon: 14px; }

@@ -1,7 +1,8 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { gallery, galleryCategories, type GalleryCategory, type GalleryItem } from '../data/gallery';
 import { BrandArt, CampaignArt, IllustrationArt, Img, PosterArt, SampleTag, SocialArt, TypeArt } from './Art';
-import { Lightbox } from './Lightbox';
+import { Lightbox, PreviewImage } from './Lightbox';
+import { asset } from '../lib/assets';
 import { Reveal } from './Reveal';
 import { SectionTitle } from './SectionTitle';
 
@@ -20,6 +21,12 @@ function GalleryPlaceholder({ g }: { g: GalleryItem }) {
   }
 }
 
+/** Large preview: contain-fit real image, or the designed placeholder (4:3) when the item has no image yet. */
+function GalleryPreview({ g }: { g: GalleryItem }) {
+  const placeholder = <div className="lb-art"><GalleryPlaceholder g={g} /></div>;
+  return g.src ? <PreviewImage key={g.id} src={g.src} alt={g.title} fallback={placeholder} /> : placeholder;
+}
+
 export function GalleryShowcase() {
   const [filter, setFilter] = useState<GalleryCategory | 'All'>('All');
   const [idx, setIdx] = useState<number | null>(null);
@@ -28,6 +35,12 @@ export function GalleryShowcase() {
   const prev = useCallback(() => setIdx((i) => (i === null ? i : (i - 1 + items.length) % items.length)), [items.length]);
   const next = useCallback(() => setIdx((i) => (i === null ? i : (i + 1) % items.length)), [items.length]);
   const cur = idx !== null ? items[idx] : null;
+
+  // warm the cache for the neighbours so prev/next feels instant
+  useEffect(() => {
+    if (idx === null) return;
+    [items[(idx + 1) % items.length], items[(idx - 1 + items.length) % items.length]].forEach((n) => { if (n?.src) new Image().src = asset(n.src); });
+  }, [idx, items]);
 
   return (
     <section id="visual" className="section stack-top visual">
@@ -52,8 +65,8 @@ export function GalleryShowcase() {
           ))}
         </div>
       </div>
-      <Lightbox open={!!cur} onClose={close} onPrev={items.length > 1 ? prev : undefined} onNext={items.length > 1 ? next : undefined} title={cur?.title ?? ''} caption={cur ? `${cur.category} · sample placeholder` : ''} counter={cur && idx !== null ? `${String(idx + 1).padStart(2, '0')} / ${String(items.length).padStart(2, '0')}` : undefined}>
-        {cur && <div className="lb-art"><GalleryArt g={cur} /></div>}
+      <Lightbox open={!!cur} onClose={close} onPrev={items.length > 1 ? prev : undefined} onNext={items.length > 1 ? next : undefined} title={cur?.title ?? ''} caption={cur ? `${cur.category}${cur.src ? '' : ' · sample placeholder'}` : ''} counter={cur && idx !== null ? `${String(idx + 1).padStart(2, '0')} / ${String(items.length).padStart(2, '0')}` : undefined}>
+        {cur && <GalleryPreview g={cur} />}
       </Lightbox>
     </section>
   );

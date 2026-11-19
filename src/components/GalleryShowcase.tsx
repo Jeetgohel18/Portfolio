@@ -1,31 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { gallery, galleryCategories, type GalleryCategory, type GalleryItem } from '../data/gallery';
-import { BrandArt, CampaignArt, IllustrationArt, Img, PosterArt, SampleTag, SocialArt, TypeArt } from './Art';
+import { Link } from 'react-router-dom';
+import { gallery, galleryCategories, type GalleryCategory } from '../data/gallery';
+import { Img } from './Art';
 import { Lightbox, PreviewImage } from './Lightbox';
-import { asset } from '../lib/assets';
 import { Reveal } from './Reveal';
 import { SectionTitle } from './SectionTitle';
-
-export function GalleryArt({ g }: { g: GalleryItem }) {
-  return <Img src={g.src} alt={g.title} className="cover-img" fallback={<GalleryPlaceholder g={g} />} />;
-}
-
-function GalleryPlaceholder({ g }: { g: GalleryItem }) {
-  switch (g.art) {
-    case 'logo': return <BrandArt p={g.palette} />;
-    case 'poster': return <PosterArt p={g.palette} />;
-    case 'social': return <SocialArt p={g.palette} />;
-    case 'campaign': return <CampaignArt p={g.palette} />;
-    case 'illustration': return <IllustrationArt p={g.palette} />;
-    default: return <TypeArt p={g.palette} />;
-  }
-}
-
-/** Large preview: contain-fit real image, or the designed placeholder (4:3) when the item has no image yet. */
-function GalleryPreview({ g }: { g: GalleryItem }) {
-  const placeholder = <div className="lb-art"><GalleryPlaceholder g={g} /></div>;
-  return g.src ? <PreviewImage key={g.id} src={g.src} alt={g.title} fallback={placeholder} /> : placeholder;
-}
+import { Arrow } from './fx/Arrow';
+import { asset } from '../lib/assets';
 
 export function GalleryShowcase() {
   const [filter, setFilter] = useState<GalleryCategory | 'All'>('All');
@@ -39,34 +20,37 @@ export function GalleryShowcase() {
   // warm the cache for the neighbours so prev/next feels instant
   useEffect(() => {
     if (idx === null) return;
-    [items[(idx + 1) % items.length], items[(idx - 1 + items.length) % items.length]].forEach((n) => { if (n?.src) new Image().src = asset(n.src); });
+    [items[(idx + 1) % items.length], items[(idx - 1 + items.length) % items.length]].forEach((n) => { if (n) new Image().src = asset(n.src); });
   }, [idx, items]);
 
   return (
     <section id="visual" className="section stack-top visual">
       <div className="wrap">
         <Reveal className="sec-head">
-          <p className="eyebrow">04 — Graphic &amp; branding</p>
+          <p className="eyebrow">03 — Visual design</p>
           <SectionTitle text="Visual *design*" />
-          <p className="sec-note">An editorial gallery for branding, social, posters, campaigns and explorations. Select any piece to view larger. <SampleTag /></p>
+          <p className="sec-note">Logos, packaging and campaign visuals from my brand identity projects. Select any piece to view it larger.</p>
         </Reveal>
         <div className="filters" role="group" aria-label="Filter gallery">
           {(['All', ...galleryCategories] as const).map((c) => (
             <button key={c} aria-pressed={filter === c} className={filter === c ? 'on' : ''} onClick={() => setFilter(c)}>{c}</button>
           ))}
         </div>
-        <div className="gal-grid" aria-live="polite">
+        <div className={`gal-grid ${filter !== 'All' ? 'uniform' : ''}`} aria-live="polite">
           {items.map((g, i) => (
-            <button key={g.id} className={`gal-item s-${g.size} v${i % 4}`} data-cursor="Open" onClick={() => setIdx(i)} aria-label={`Open ${g.title}`}>
-              <div className="gal-art"><GalleryArt g={g} /></div>
+            <button key={g.id} className={`gal-item s-${g.size} v${i % 4}`} data-cursor="Open" style={filter !== 'All' ? { aspectRatio: `${g.w} / ${g.h}` } : undefined} onClick={() => setIdx(i)} aria-label={`Open ${g.title} — ${g.project}`}>
+              <div className="gal-art"><Img src={g.src} alt={g.alt} className="cover-img" width={g.w} height={g.h} /></div>
               <span className="gal-no" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-              <span className="gal-cap"><b>{g.title}</b><i>{g.category}</i></span>
+              <span className="gal-cap"><b>{g.title}</b><i>{g.project}</i></span>
             </button>
           ))}
         </div>
       </div>
-      <Lightbox open={!!cur} onClose={close} onPrev={items.length > 1 ? prev : undefined} onNext={items.length > 1 ? next : undefined} title={cur?.title ?? ''} caption={cur ? `${cur.category}${cur.src ? '' : ' · sample placeholder'}` : ''} counter={cur && idx !== null ? `${String(idx + 1).padStart(2, '0')} / ${String(items.length).padStart(2, '0')}` : undefined}>
-        {cur && <GalleryPreview g={cur} />}
+      <Lightbox open={!!cur} onClose={close} onPrev={items.length > 1 ? prev : undefined} onNext={items.length > 1 ? next : undefined}
+        title={cur?.title ?? ''} caption={cur ? `${cur.project} · ${cur.category}` : ''}
+        counter={cur && idx !== null ? `${String(idx + 1).padStart(2, '0')} / ${String(items.length).padStart(2, '0')}` : undefined}
+        action={cur && <Link to={`/work/${cur.slug}`} className="lb-link" onClick={close}>View project <Arrow /></Link>}>
+        {cur && <PreviewImage key={cur.id} src={cur.src} alt={cur.alt} />}
       </Lightbox>
     </section>
   );

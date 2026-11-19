@@ -12,6 +12,8 @@ type Props = {
   title: string;
   caption?: string;
   counter?: string;
+  /** Optional extra control rendered in the caption row (e.g. a link to the project). */
+  action?: ReactNode;
   children: ReactNode;
 };
 
@@ -26,7 +28,7 @@ const FOCUSABLE = 'button, [href], iframe, video[controls], [tabindex]:not([tabi
  * ancestor that has a transform/filter/containment, so inside the page's animated wrapper a "fixed" overlay is
  * laid out against the whole document instead of the viewport (the original blank-overlay bug).
  */
-export function Lightbox({ open, onClose, onPrev, onNext, title, caption, counter, children }: Props) {
+export function Lightbox({ open, onClose, onPrev, onNext, title, caption, counter, action, children }: Props) {
   const closeRef = useRef<HTMLButtonElement>(null);
   const dialog = useRef<HTMLDivElement>(null);
   // always call the latest handlers without re-running the open/close effect on every parent render
@@ -81,6 +83,7 @@ export function Lightbox({ open, onClose, onPrev, onNext, title, caption, counte
         <figcaption>
           <strong>{counter && <em className="lb-count">{counter}</em>}{title}</strong>
           {caption && <span>{caption}</span>}
+          {action}
         </figcaption>
       </figure>
       <p className="sr-only" role="status" aria-live="polite">{counter ? `${counter}. ` : ''}{title}</p>
@@ -93,7 +96,7 @@ export function Lightbox({ open, onClose, onPrev, onNext, title, caption, counte
  * Contain-fit image for previews: keeps the file's own aspect ratio (never crops or stretches),
  * shows a skeleton while loading, and falls back to `fallback` + a notice if the file is missing/broken.
  */
-export function PreviewImage({ src, alt, fallback }: { src: string; alt: string; fallback: ReactNode }) {
+export function PreviewImage({ src, alt, fallback = null }: { src: string; alt: string; fallback?: ReactNode }) {
   const [state, setState] = useState<'loading' | 'ok' | 'error'>('loading');
   const ref = useRef<HTMLImageElement>(null);
 

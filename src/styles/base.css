@@ -179,8 +179,6 @@ h4 { font-family: var(--font-display); font-weight: 560; font-stretch: 88%; lett
 /* placeholder art, video/iframe, and the error state */
 .lb-art { width: auto; max-width: 100%; height: min(calc(100vh - var(--lb-chrome)), 660px); height: min(calc(100dvh - var(--lb-chrome)), 660px); aspect-ratio: 4/3; overflow: hidden; border-radius: var(--r-md); border: 1.5px solid rgba(246,240,228,.3); display: grid; place-items: center; }
 .lb-art > * { width: 100%; height: 100%; }
-.lb-motion { width: min(960px, 100%, calc((100dvh - var(--lb-chrome)) * 16 / 9)); aspect-ratio: 16/9; background: #000; border-radius: var(--r-sm); overflow: hidden; }
-.lb-motion > * { width: 100%; height: 100%; object-fit: contain; border: 0; }
 .lb-error { display: grid; justify-items: center; gap: 14px; max-width: 100%; }
 .lb-error-note { display: inline-flex; align-items: center; gap: 8px; font: 600 14px var(--font-body); color: var(--paper); background: rgba(246,240,228,.12); border: 1.5px solid rgba(246,240,228,.3); border-radius: var(--r-pill); padding: 8px 16px; --icon: 18px; }
 
@@ -317,3 +315,5 @@ main { overflow-x: clip; }
 
 /* while a modal locks scrolling the scrollbar disappears; keep the fixed nav from shifting */
 .nav { padding-right: calc(var(--gut) + var(--sbw, 0px)); }
+.lb-link { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; font: 700 12px var(--font-body); letter-spacing: .1em; text-transform: uppercase; color: var(--butter); border-bottom: 1.5px solid currentColor; padding-bottom: 2px; --icon: 16px; }
+.lb-link:hover { color: var(--paper); }

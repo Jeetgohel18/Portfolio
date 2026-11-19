@@ -14,7 +14,7 @@ export const personal = {
   whatsapp: '',
   /** Replace the PDF at public/resume/jeet-gohel-resume.pdf, or change this path. */
   resumePath: 'resume/jeet-gohel-resume.pdf',
-  /** Portrait: drop a file at public/images/profile/ and set the path. Empty = designed placeholder. */
+  /** Portrait: drop a file at public/images/profile/ and set the path. Empty = JG monogram. */
   portrait: '' as string,
   company: 'iCode49 Technolabs',
   intro:

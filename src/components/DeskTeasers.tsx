@@ -11,7 +11,7 @@ export function DeskTeasers() {
       <div className="wrap teasers-grid">
         <Reveal as="div" className="teaser teaser-about" >
           <Link to="/about" id="about-teaser" aria-label="Visit the interactive desk — about me">
-            <p className="eyebrow">06 — About</p>
+            <p className="eyebrow">04 — About</p>
             <h2>Pull up a <em>chair</em>.</h2>
             <p>My desk holds the story — a notebook, a resume card, the tools I use. Open things up.</p>
             <Obj3D kind="pencil" tone="butter" size={26} float={7} rot={-30} className="hide-m" style={{ right: '8%', top: '12%' }} depth={0} />
@@ -26,7 +26,7 @@ export function DeskTeasers() {
         </Reveal>
         <Reveal as="div" delay={120} className="teaser teaser-contact">
           <Link to="/contact" id="contact-teaser" aria-label="Write me a letter — contact">
-            <p className="eyebrow">07 — Contact</p>
+            <p className="eyebrow">05 — Contact</p>
             <h2>Write me a <em>letter</em>.</h2>
             <p>{personal.email}</p>
             <Obj3D kind="plane" tone="butter" size={54} float={6} rot={-12} className="hide-m" style={{ right: '9%', top: '9%' }} depth={0} />

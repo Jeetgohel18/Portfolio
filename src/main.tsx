@@ -8,8 +8,8 @@ import App from './App';
 import './styles/base.css';
 import './styles/hero.css';
 import './styles/sections.css';
-import './styles/case.css';
 import './styles/pages.css';
+import './styles/project.css';
 import './styles/fx.css';
 
 createRoot(document.getElementById('root')!).render(

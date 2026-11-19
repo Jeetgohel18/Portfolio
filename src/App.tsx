@@ -5,7 +5,7 @@ import { Nav } from './components/Nav';
 import { Footer } from './components/Footer';
 import { Cursor } from './components/fx/Cursor';
 import Home from './pages/Home';
-import CaseStudy from './pages/CaseStudy';
+import ProjectPage from './pages/Project';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Resume from './pages/Resume';
@@ -48,7 +48,7 @@ export default function App() {
       <div key={pathname.split('/')[1] + (pathname.split('/')[2] ?? '')} className="page-wrap">
         <Routes>
           <Route path="/" element={<Home ready={loaded} onTone={tone} />} />
-          <Route path="/work/:slug" element={<CaseStudy />} />
+          <Route path="/work/:slug" element={<ProjectPage />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/resume" element={<Resume />} />

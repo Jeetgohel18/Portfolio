@@ -1,55 +1,37 @@
 /**
- * Graphic & branding gallery + motion experiments.
- * Set `src` to a file in public/images/projects/graphics/ (or branding/) to replace a placeholder.
+ * "Visual design" gallery — a curated selection of real work, each linking back to its project.
+ * To add a piece: add an item here pointing at an image that already lives in public/images/projects/.
+ * `size` controls its footprint in the editorial grid.
  */
-export type GalleryCategory = 'Branding' | 'Social media' | 'Posters' | 'Campaign' | 'Illustration' | 'Explorations';
+export type GalleryCategory = 'Logos' | 'Packaging' | 'Campaign';
 
 export type GalleryItem = {
   id: string;
   title: string;
+  project: string;
+  slug: string;
   category: GalleryCategory;
-  /** Layout size in the editorial grid. */
-  size: 'tall' | 'wide' | 'square' | 'small' | 'feature';
-  art: 'logo' | 'poster' | 'social' | 'campaign' | 'illustration' | 'type';
-  palette: [string, string, string];
-  src?: string;
+  size: 'wide' | 'square' | 'half' | 'feature';
+  src: string;
+  w: number;
+  h: number;
+  alt: string;
 };
 
-export const galleryCategories: GalleryCategory[] = ['Branding', 'Social media', 'Posters', 'Campaign', 'Illustration', 'Explorations'];
+export const galleryCategories: GalleryCategory[] = ['Logos', 'Packaging', 'Campaign'];
 
+const P = 'images/projects/';
 export const gallery: GalleryItem[] = [
-  { id: 'g1', title: 'Identity system', category: 'Branding', size: 'feature', art: 'logo', palette: ['#3b47ff', '#f6f0e4', '#ffd75e'] },
-  { id: 'g2', title: 'Poster study 01', category: 'Posters', size: 'tall', art: 'poster', palette: ['#ff6a4a', '#1f1a17', '#fffaf1'] },
-  { id: 'g3', title: 'Social series', category: 'Social media', size: 'square', art: 'social', palette: ['#cdbdff', '#1f1a17', '#ff6a4a'] },
-  { id: 'g4', title: 'Campaign key visual', category: 'Campaign', size: 'wide', art: 'campaign', palette: ['#1e1416', '#f6f0e4', '#bfe6cf'] },
-  { id: 'g5', title: 'Illustration study', category: 'Illustration', size: 'tall', art: 'illustration', palette: ['#ffd75e', '#1f1a17', '#3b47ff'] },
-  { id: 'g6', title: 'Type exploration', category: 'Explorations', size: 'small', art: 'type', palette: ['#1f1a17', '#f6f0e4', '#ffd75e'] },
-  { id: 'g7', title: 'Logo marks', category: 'Branding', size: 'small', art: 'logo', palette: ['#f6f0e4', '#1f1a17', '#ff6a4a'] },
-  { id: 'g8', title: 'Poster study 02', category: 'Posters', size: 'square', art: 'poster', palette: ['#bfe6cf', '#1f1a17', '#3b47ff'] },
-  { id: 'g9', title: 'Social carousel', category: 'Social media', size: 'wide', art: 'social', palette: ['#3b47ff', '#fffaf1', '#ffd75e'] },
-  { id: 'g10', title: 'Campaign poster', category: 'Campaign', size: 'tall', art: 'campaign', palette: ['#7a1f2b', '#fffaf1', '#ffd75e'] },
-  { id: 'g11', title: 'Creative exploration', category: 'Explorations', size: 'square', art: 'type', palette: ['#cdbdff', '#1f1a17', '#3b47ff'] },
-];
-
-export type MotionItem = {
-  id: string;
-  title: string;
-  kind: 'MP4' | 'GIF' | 'Prototype' | 'Animation';
-  note: string;
-  palette: [string, string, string];
-  /** public path, e.g. 'videos/logo-reveal.mp4' */
-  video?: string;
-  /** public path, e.g. 'images/experiments/loader.gif' */
-  gif?: string;
-  poster?: string;
-  /** Interactive prototype URL (Figma/Framer embed) */
-  embed?: string;
-};
-
-export const motionItems: MotionItem[] = [
-  { id: 'm1', title: 'Logo reveal', kind: 'MP4', note: 'Drop an .mp4 in public/videos/', palette: ['#1e1416', '#f6f0e4', '#ff6a4a'] },
-  { id: 'm2', title: 'Micro-interaction', kind: 'GIF', note: 'Drop a .gif in public/images/experiments/', palette: ['#ffd75e', '#1f1a17', '#3b47ff'] },
-  { id: 'm3', title: 'Prototype', kind: 'Prototype', note: 'Add a Figma / Framer embed URL', palette: ['#cdbdff', '#1f1a17', '#ff6a4a'] },
-  { id: 'm4', title: 'Loader study', kind: 'Animation', note: 'Animated visual asset', palette: ['#ff6a4a', '#1f1a17', '#fffaf1'] },
-  { id: 'm5', title: 'Page transition', kind: 'MP4', note: 'Drop an .mp4 in public/videos/', palette: ['#3b47ff', '#f6f0e4', '#ffd75e'] },
+  { id: 'g1', title: 'Gift box presentation', project: 'Lummi', slug: 'lummi', category: 'Packaging', size: 'feature', src: `${P}lummi/brand-in-hand.webp`, w: 1997, h: 1123, alt: 'A hand presenting a pale green Lummi gift box' },
+  { id: 'g2', title: 'Logo — burgundy on cream', project: 'NOAH · Concept 01', slug: 'noah', category: 'Logos', size: 'square', src: `${P}noah/concept-1-logo-primary.webp`, w: 986, h: 986, alt: 'NOAH concept 1 logo in burgundy on cream' },
+  { id: 'g3', title: 'Logo — sage on pale green', project: 'Lummi', slug: 'lummi', category: 'Logos', size: 'square', src: `${P}lummi/logo-primary.webp`, w: 986, h: 986, alt: 'Lummi logo in sage green on a pale green background' },
+  { id: 'g4', title: 'Coffee bag with hang tag', project: 'NOAH · Concept 01', slug: 'noah', category: 'Packaging', size: 'wide', src: `${P}noah/concept-1-packaging.webp`, w: 1997, h: 1123, alt: 'NOAH concept 1 cream coffee bag with burgundy hang tag' },
+  { id: 'g5', title: 'Logo — lavender on white', project: 'NOAH · Concept 02', slug: 'noah', category: 'Logos', size: 'half', src: `${P}noah/concept-2-logo-primary.webp`, w: 986, h: 987, alt: 'NOAH concept 2 logo in lavender on white' },
+  { id: 'g6', title: 'Logo — charcoal on lavender', project: 'NOAH · Concept 02', slug: 'noah', category: 'Logos', size: 'half', src: `${P}noah/concept-2-logo-reversed.webp`, w: 986, h: 986, alt: 'NOAH concept 2 logo in charcoal on lavender' },
+  { id: 'g7', title: 'New collection', project: 'Lummi', slug: 'lummi', category: 'Campaign', size: 'wide', src: `${P}lummi/campaign-banner.webp`, w: 1997, h: 1124, alt: 'Lummi campaign visual: a new collection announcement with earrings and a portrait' },
+  { id: 'g8', title: 'Logo — sage on cream', project: 'NOAH · Concept 03', slug: 'noah', category: 'Logos', size: 'square', src: `${P}noah/concept-3-logo-primary.webp`, w: 986, h: 986, alt: 'NOAH concept 3 logo in sage on cream' },
+  { id: 'g9', title: 'Logo — cream on burgundy', project: 'NOAH · Concept 01', slug: 'noah', category: 'Logos', size: 'square', src: `${P}noah/concept-1-logo-reversed.webp`, w: 986, h: 986, alt: 'NOAH concept 1 logo in cream on burgundy' },
+  { id: 'g10', title: 'Coffee bag on dark blue', project: 'NOAH · Concept 02', slug: 'noah', category: 'Packaging', size: 'wide', src: `${P}noah/concept-2-packaging.webp`, w: 1997, h: 1123, alt: 'NOAH concept 2 white coffee bag with lavender label' },
+  { id: 'g11', title: 'Packaging in use', project: 'NOAH · Concept 03', slug: 'noah', category: 'Packaging', size: 'wide', src: `${P}noah/concept-3-in-hand.webp`, w: 1997, h: 1123, alt: 'Two hands holding NOĀH coffee bags' },
+  { id: 'g12', title: 'Logo — cream on sage', project: 'NOAH · Concept 03', slug: 'noah', category: 'Logos', size: 'square', src: `${P}noah/concept-3-logo-reversed.webp`, w: 986, h: 986, alt: 'NOAH concept 3 logo in cream on sage' },
 ];

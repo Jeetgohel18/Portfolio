@@ -48,9 +48,9 @@ Motion + CSS-3D toolkit in `src/components/fx/` (SplitText, Magnetic, Cursor, Ob
 ## Deploying
 Static SPA. `vercel.json` and `public/_redirects` provide the fallback to `index.html`.
 
-## Colour Playground (entry experience)
+## The Playground (entry experience)
 
-First visit of a browser session landing on `/` opens a CSS-3D colour-mixing playground before the portfolio (`src/components/playground/`, `src/lib/colour.ts`, `src/styles/playground.css`). It is lazy-loaded, shown once per session (`sessionStorage` key `jg-played`), skipped for deep links and with `/?intro=0`, and never blocks the portfolio (Skip button, error fallback, reduced-motion support).
-- **Mixing model** lives in `src/lib/colour.ts` (pure functions, documented at the top): artist-wheel RYB pigment mixing + OKLCH lightness/chroma correction; deterministic and symmetric.
-- **Starting colours:** `src/components/playground/palette.ts`. **Colour names:** `NAMES` in `colour.ts`.
-- **To remove it:** delete those three paths and the `intro`/`ColourPlayground` lines in `src/App.tsx`.
+First visit of a browser session landing on `/` opens an interactive art-making playground before the portfolio (`src/components/playground/`, `src/lib/art/`, `src/styles/playground.css`). It is lazy-loaded, shown once per session (`sessionStorage` key `jg-played`), skipped for deep links and with `/?intro=0`, and never blocks the portfolio (Skip button, error fallback, reduced-motion support). No dependencies were added: objects are SVG drawings, so the same artwork is used on screen and for PNG export.
+- **Objects:** `src/lib/art/shapes.ts` (21 drawn kinds, 6 materials, library groups, type words). **Palettes:** `palettes.ts`.
+- **Magic Shuffle + challenges:** `compose.ts` (seeded, rule-based composition; challenge validators). **PNG export:** `exportPng.ts`.
+- **To remove it:** delete those paths and the `intro` / `CreativePlayground` lines in `src/App.tsx`.

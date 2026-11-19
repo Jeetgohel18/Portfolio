@@ -15,11 +15,7 @@ export function useCopy() {
         document.body.appendChild(ta); ta.select(); ok = document.execCommand('copy'); ta.remove();
       } catch { ok = false; }
     }
-    if (ok) {
-      setCopied(text);
-      window.clearTimeout(timer.current);
-      timer.current = window.setTimeout(() => setCopied(null), 1600);
-    }
+    if (ok) { setCopied(text); window.clearTimeout(timer.current); timer.current = window.setTimeout(() => setCopied(null), 1600); }
     return ok;
   }, []);
   return { copied, copy };

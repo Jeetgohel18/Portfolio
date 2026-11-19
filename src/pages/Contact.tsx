@@ -94,7 +94,7 @@ export default function Contact() {
               <div className="env-back" />
               <div className="env-flap" />
               <div className="env-seal" aria-hidden="true"><span>JG</span></div>
-              <div className="env-addr" aria-hidden="true"><b>To: Jeet Gohel</b><span>Bhavnagar, Gujarat, India</span></div>
+              <div className="env-addr" aria-hidden="true"><b>To: Jeet Gohel</b><span>Ahmedabad, Gujarat, India</span></div>
               <div className="env-stamp" aria-hidden="true"><i /></div>
               <div className="paper" {...(!open ? { inert: true } : {})}>
                 <form id="contact-form" onSubmit={submit} noValidate aria-label="Contact form">

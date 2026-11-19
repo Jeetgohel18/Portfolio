@@ -6,7 +6,7 @@ export const personal = {
   firstName: 'Jeet',
   title: 'UI/UX Designer · Product Designer · Visual Designer',
   roles: ['UI/UX Designer', 'Product Designer', 'Visual Designer'],
-  location: 'Bhavnagar, Gujarat, India',
+  location: 'Ahmedabad, Gujarat, India',
   email: 'goheljeet563@gmail.com',
   linkedin: 'https://www.linkedin.com/in/jeet-g-59800629a/',
   behance: 'https://www.behance.net/goheljeet/projects',

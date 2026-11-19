@@ -47,3 +47,10 @@ Motion + CSS-3D toolkit in `src/components/fx/` (SplitText, Magnetic, Cursor, Ob
 
 ## Deploying
 Static SPA. `vercel.json` and `public/_redirects` provide the fallback to `index.html`.
+
+## Colour Playground (entry experience)
+
+First visit of a browser session landing on `/` opens a CSS-3D colour-mixing playground before the portfolio (`src/components/playground/`, `src/lib/colour.ts`, `src/styles/playground.css`). It is lazy-loaded, shown once per session (`sessionStorage` key `jg-played`), skipped for deep links and with `/?intro=0`, and never blocks the portfolio (Skip button, error fallback, reduced-motion support).
+- **Mixing model** lives in `src/lib/colour.ts` (pure functions, documented at the top): artist-wheel RYB pigment mixing + OKLCH lightness/chroma correction; deterministic and symmetric.
+- **Starting colours:** `src/components/playground/palette.ts`. **Colour names:** `NAMES` in `colour.ts`.
+- **To remove it:** delete those three paths and the `intro`/`ColourPlayground` lines in `src/App.tsx`.

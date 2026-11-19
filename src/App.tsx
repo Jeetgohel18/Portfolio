@@ -13,7 +13,7 @@ import Resume from './pages/Resume';
 import NotFound from './pages/NotFound';
 
 /** Entry experience: lazy-loaded so it never slows the portfolio; if it fails to load or crashes the portfolio simply opens. */
-const CreativePlayground = lazy(() => import('./components/playground/CreativePlayground'));
+const Arcade = lazy(() => import('./components/playground/Arcade'));
 const PLAYED = 'jg-played';
 
 class PlaygroundGuard extends Component<{ onFail: () => void; children: ReactNode }, { failed: boolean }> {
@@ -76,7 +76,7 @@ export default function App() {
       {intro && (
         <PlaygroundGuard onFail={skipAll}>
           <Suspense fallback={<PlaygroundShell onSkip={skipAll} />}>
-            <CreativePlayground onReveal={reveal} onDone={finishIntro} />
+            <Arcade onReveal={reveal} onDone={finishIntro} />
           </Suspense>
         </PlaygroundGuard>
       )}

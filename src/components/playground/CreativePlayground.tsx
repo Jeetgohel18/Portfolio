@@ -17,7 +17,7 @@ import { ColourStudio } from './ColourStudio';
 import { ChallengePanel } from './ChallengePanel';
 import '../../styles/playground.css';
 
-type Props = { onReveal: () => void; onDone: () => void };
+type Props = { onReveal: () => void; onDone: () => void; /** When provided, a “Games” button returns to the game-selection screen. */ onBack?: (e?: MouseEvent<HTMLElement>) => void };
 type Hist = { past: Doc[]; present: Doc; future: Doc[] };
 
 const EMPTY: Doc = { bg: '#fff1e0', paletteId: PALETTES[0].id, objs: [] };
@@ -29,7 +29,7 @@ function usePrefersReducedMotion() {
   return r;
 }
 
-export default function CreativePlayground({ onReveal, onDone }: Props) {
+export default function CreativePlayground({ onReveal, onDone, onBack }: Props) {
   const reduced = usePrefersReducedMotion();
   const [hist, setHist] = useState<Hist>({ past: [], present: EMPTY, future: [] });
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -189,7 +189,10 @@ export default function CreativePlayground({ onReveal, onDone }: Props) {
     <div ref={root} className={`pg ${phase} ${touched ? 'touched' : ''}`} style={style} role="region" aria-label="The Playground — an interactive design experiment">
       <div className="pg-inner">
         <header className="pg-head">
-          <p className="pg-brand"><i aria-hidden="true" />Jeet Gohel / Playground<span className="pg-tag">Interactive design experiment</span></p>
+          <div className="pg-head-l">
+            {onBack && <button type="button" className="pg-back" onClick={onBack} aria-label="Back to game selection">← <span>Games</span></button>}
+            <p className="pg-brand"><i aria-hidden="true" />Jeet Gohel / Playground<span className="pg-tag">Interactive design experiment</span></p>
+          </div>
           <button type="button" className="btn-solid pg-skip" onClick={leave} data-cursor="Enter">Skip to Portfolio <span aria-hidden="true">→</span></button>
         </header>
 

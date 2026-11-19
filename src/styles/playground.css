@@ -162,3 +162,8 @@
   .pg *, .pg { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   .po-float { animation: none !important; }
 }
+
+/* back-to-games button (shown when launched from the game-selection screen) */
+.pg-head-l { display: flex; align-items: center; gap: 14px; min-width: 0; flex-wrap: wrap; }
+.pg-back { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid #1f1a17; font: 600 13px/1 var(--font-body); letter-spacing: .04em; transition: background .25s, color .25s, transform .3s var(--ease); }
+.pg-back:hover { background: #1f1a17; color: var(--paper); transform: translateX(-2px); }

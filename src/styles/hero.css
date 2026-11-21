@@ -1,0 +1,128 @@
+/* ===== Hero: interactive sky ===== */
+.sky { position: relative; height: 100svh; min-height: 640px; overflow: hidden; color: var(--hero-ink); --hero-ink: var(--ink); --trunk: #5b4636; }
+.sky.is-dark { --hero-ink: var(--paper); }
+.sky-stage { position: absolute; inset: 0; touch-action: pan-y; contain: layout paint; }
+.sky-bg { position: absolute; inset: 0; background: linear-gradient(to bottom, var(--sky-top) 0%, var(--sky-mid) 55%, var(--sky-bot) 85%); }
+.sky-glow { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 40% at 50% 80%, rgba(255,150,80,.55), transparent 70%); opacity: var(--glow); mix-blend-mode: screen; pointer-events: none; }
+.sky-stars { position: absolute; inset: 0; opacity: var(--stars); pointer-events: none; }
+.sky-stars i { position: absolute; border-radius: 50%; background: #fff; animation: twinkle 3.5s ease-in-out infinite; }
+@keyframes twinkle { 50% { opacity: .25; } }
+
+/* clouds: soft, layered */
+.sky-clouds { position: absolute; inset: 0; pointer-events: none; opacity: calc(.3 + var(--day) * .7); }
+.cloud { position: absolute; height: 56px; border-radius: 60px; background: linear-gradient(#fff 40%, #e7edfa); box-shadow: 0 10px 22px -8px rgba(60, 80, 140, .28); animation: drift linear infinite; }
+.cloud::before, .cloud::after { content: ''; position: absolute; background: inherit; border-radius: 50%; }
+.cloud::before { width: 54%; height: 150%; left: 14%; top: -62%; }
+.cloud::after { width: 38%; height: 120%; right: 12%; top: -42%; }
+.cloud.c1 { width: 190px; top: 14%; left: -220px; animation-duration: 120s; }
+.cloud.c2 { width: 130px; top: 31%; left: -160px; animation-duration: 90s; animation-delay: -40s; opacity: .7; }
+.cloud.c3 { width: 240px; top: 22%; left: -260px; animation-duration: 150s; animation-delay: -90s; opacity: .55; }
+.cloud.c4 { width: 110px; top: 9%; left: -140px; animation-duration: 105s; animation-delay: -20s; opacity: .8; }
+@keyframes drift { to { transform: translateX(calc(100vw + 520px)); } }
+.is-dark .cloud { background: linear-gradient(#9aa5cc, #6f7aa3); opacity: .22; box-shadow: none; }
+.season-winter .cloud { opacity: .95; }
+
+/* birds (daytime only) */
+.birds { position: absolute; inset: 0; pointer-events: none; opacity: calc(var(--day) * var(--day)); }
+.birds svg { position: absolute; width: 22px; fill: none; stroke: rgba(31,26,23,.55); stroke-width: 1.6; stroke-linecap: round; animation: fly linear infinite; }
+.birds svg:nth-child(1) { top: 24%; left: -30px; animation-duration: 46s; } .birds svg:nth-child(2) { top: 20%; left: -60px; width: 16px; animation-duration: 46s; animation-delay: .8s; } .birds svg:nth-child(3) { top: 27%; left: -48px; width: 14px; animation-duration: 52s; animation-delay: -18s; }
+@keyframes fly { 0% { transform: translate(0, 0) scaleY(1); } 25% { transform: translate(28vw, -14px) scaleY(.6); } 50% { transform: translate(56vw, 6px) scaleY(1); } 75% { transform: translate(84vw, -10px) scaleY(.6); } 100% { transform: translate(112vw, 0) scaleY(1); } }
+.season-winter .birds { display: none; }
+
+/* sun / moon */
+.orb { position: absolute; width: clamp(64px, 9vw, 108px); aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; z-index: 2; cursor: grab; touch-action: none; opacity: 0; pointer-events: none; transition: opacity .6s; }
+.orb.on { opacity: 1; pointer-events: auto; }
+.dragging .orb { cursor: grabbing; }
+.orb:focus-visible { outline: 3px solid var(--accent); outline-offset: 10px; }
+.orb-core { position: absolute; inset: 0; border-radius: 50%; display: block; transition: transform .5s var(--spring); }
+.orb:hover .orb-core, .dragging .orb-core { transform: scale(1.1); }
+.sun .orb-core { background: radial-gradient(circle at 38% 35%, #fffbe0, #ffd45a 55%, #ff9a3c); box-shadow: 0 0 0 10px rgba(255,214,90,.22), 0 0 0 28px rgba(255,214,90,.12), 0 0 90px 30px rgba(255,190,80,.55); }
+.sun::before { content: ''; position: absolute; inset: -70%; border-radius: 50%; background: repeating-conic-gradient(from 0deg, rgba(255,226,140,.5) 0 5deg, transparent 5deg 15deg); -webkit-mask: radial-gradient(circle, transparent 0 24%, #000 25% 46%, transparent 70%); mask: radial-gradient(circle, transparent 0 24%, #000 25% 46%, transparent 70%); animation: spin-slow 60s linear infinite; pointer-events: none; }
+.moon .orb-core { background: radial-gradient(circle at 36% 34%, #fff, #dfe5f5 60%, #aeb8d8); box-shadow: 0 0 0 10px rgba(220,230,255,.1), 0 0 80px 18px rgba(170,190,255,.35); overflow: hidden; }
+.moon .orb-core::before, .moon .orb-core::after { content: ''; position: absolute; border-radius: 50%; background: rgba(130,145,190,.28); }
+.moon .orb-core::before { width: 24%; height: 24%; left: 56%; top: 22%; } .moon .orb-core::after { width: 16%; height: 16%; left: 24%; top: 58%; }
+.drag-hint { position: absolute; z-index: 4; pointer-events: none; translate: -50% calc(-100% - clamp(52px, 6.4vw, 78px)); transition: opacity .5s; }
+.drag-hint.gone { opacity: 0; }
+.drag-hint span { display: inline-block; background: var(--paper-3); color: var(--ink); border: 1.5px solid var(--ink); box-shadow: 2px 3px 0 var(--ink); font: 600 12px var(--font-body); letter-spacing: .1em; text-transform: uppercase; padding: 8px 14px; border-radius: var(--r-pill); animation: bob 2s ease-in-out infinite; white-space: nowrap; }
+@keyframes bob { 50% { transform: translateY(-6px); } }
+
+/* landscape */
+.land, .trees { position: absolute; left: 0; width: 100%; bottom: 0; pointer-events: none; z-index: 3; }
+.land.back { height: 46%; } .land.mid { height: 38%; } .land.front { height: 26%; } .trees { height: 40%; }
+.land path { transition: fill .2s; }
+.leaf { fill: var(--leaf, #4c973f); transition: opacity .5s, fill .5s; }
+.season-spring { --leaf: #f4a6c0; } .season-summer { --leaf: #4c9a46; } .season-autumn { --leaf: #e07a2c; }
+.season-winter .leaf { opacity: 0; } .season-winter { --trunk: #4a3d34; }
+.is-dark .leaf { filter: brightness(.45); }
+.is-dark .trees rect, .is-dark .trees path { opacity: .6; }
+
+/* particles */
+.particles { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; }
+.particles i { position: absolute; top: -5%; display: block; animation: fall linear infinite; will-change: transform; }
+@keyframes fall { 0% { transform: translate3d(0,0,0) rotate(0); } 100% { transform: translate3d(var(--w), 112svh, 0) rotate(360deg); } }
+.p-spring i { width: calc(10px * var(--s)); height: calc(7px * var(--s)); background: #ffb7cf; border-radius: 80% 0 80% 0; opacity: .85; }
+.p-autumn i { width: calc(12px * var(--s)); height: calc(12px * var(--s)); background: #d9692a; border-radius: 0 70% 0 70%; opacity: .85; }
+.p-autumn i:nth-child(3n) { background: #b8481f; } .p-autumn i:nth-child(3n+1) { background: #e8a13a; }
+.p-winter i { width: calc(6px * var(--s)); height: calc(6px * var(--s)); background: #fff; border-radius: 50%; opacity: .9; }
+.p-summer i { top: auto; bottom: 8%; width: calc(5px * var(--s)); height: calc(5px * var(--s)); border-radius: 50%; background: #ffe36a; box-shadow: 0 0 12px 4px rgba(255,227,106,.7); animation: rise linear infinite; opacity: var(--night); }
+@keyframes rise { 0% { transform: translate3d(0,0,0); } 100% { transform: translate3d(var(--w), -60svh, 0); } }
+
+/* ---- Copy ---- */
+.sky-copy { position: absolute; inset: auto 0 calc(clamp(24px, 4vw, 56px) + clamp(96px, 15vh, 160px)) 0; margin: 0 auto; z-index: 4; pointer-events: none; display: grid; gap: var(--s4); justify-items: start; }
+.sky-copy .eyebrow { color: inherit; opacity: .85; }
+.sky-copy .eyebrow::before { background: var(--coral); }
+.sky-title { font-size: clamp(100px, 19.5vw, 286px); line-height: .8; color: inherit; font-weight: 800; letter-spacing: -.05em; pointer-events: none; width: fit-content; max-width: 100%; }
+.sky-title .line { display: block; }
+.sky-title .ch { pointer-events: auto; }  /* only glyph boxes react, so the sun behind the title stays grabbable */
+.sky-title .l1 { font-size: .4em; font-weight: 330; font-stretch: 100%; letter-spacing: -.045em; line-height: 1; margin: 0 0 .04em .02em; }
+.sky-title .l2 { font-weight: 720; font-stretch: 78%; letter-spacing: -.03em; }
+.sky-title .st .w { padding-top: .16em; margin-top: -.16em; }
+.name-wrap { position: relative; display: inline-block; }
+.badge { position: absolute; left: calc(100% + .02em); top: .02em; width: .44em; height: .44em; animation: spin-slow 24s linear infinite; filter: drop-shadow(2px 3px 0 var(--ink)); }
+.badge .b-bg { fill: var(--butter); stroke: var(--ink); stroke-width: 1.6; }
+.badge text { font: 700 10.6px var(--font-body); letter-spacing: .16em; fill: var(--ink); }
+.badge .b-star { fill: var(--coral); stroke: var(--ink); stroke-width: 1.6; stroke-linejoin: round; }
+.sky-lede { max-width: 38ch; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.5; }
+.sky-eyebrow, .sky-lede { opacity: 0; transform: translateY(12px); transition: opacity 1s .9s, transform 1s var(--ease) .9s; }
+.sky.ready .sky-eyebrow, .sky.ready .sky-lede { opacity: .9; transform: none; }
+
+/* ---- Controls dock ---- */
+.sky-controls { position: absolute; inset: auto 0 calc(clamp(24px, 4vw, 56px) + 14px) 0; margin: 0 auto; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: var(--s4); }
+.sky-dock { display: inline-flex; align-items: center; gap: 4px; padding: 6px; border-radius: var(--r-pill); background: var(--paper-3); color: var(--ink); border: 1.5px solid var(--ink); box-shadow: 3px 4px 0 var(--ink); flex-wrap: nowrap; }
+.sky-readout { display: inline-flex; align-items: center; gap: 8px; padding: 0 14px 0 12px; height: 40px; font: 600 13px var(--font-body); letter-spacing: .02em; white-space: nowrap; }
+.sky-readout strong { font-weight: 700; font-variant-numeric: tabular-nums; min-width: 7.2ch; }
+.sky-readout span { color: var(--ink-2); font-weight: 500; }
+.sky-chips, .sky-seasons { display: inline-flex; gap: 2px; padding-left: 6px; border-left: 1.5px solid var(--line); margin-left: 2px; }
+.sky-chips button, .sky-seasons button { display: inline-flex; align-items: center; gap: 7px; height: 40px; padding: 0 12px; border-radius: var(--r-pill); font: 600 13px var(--font-body); transition: background .25s, color .25s, transform .4s var(--spring); }
+.sky-chips button:hover, .sky-seasons button:hover { background: var(--butter); transform: translateY(-2px); }
+.sky-chips button:hover .lucide, .sky-seasons button:hover .lucide { animation: wiggle .6s var(--ease); }
+.sky-chips button:active, .sky-seasons button:active { transform: scale(.94); }
+.sky-seasons button.on { background: var(--ink); color: var(--paper-3); }
+.sky-scroll { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: var(--paper-3); animation: bob 2.4s ease-in-out infinite; }
+.sky-scroll:hover { background: var(--accent); }
+
+@media (max-width: 1000px) { .sky-chips .lbl, .sky-seasons .lbl { display: none; } .sky-chips button, .sky-seasons button { width: 40px; padding: 0; justify-content: center; } }
+@media (max-width: 760px) {
+  .sky-controls { bottom: calc(clamp(24px, 4vw, 56px) + 8px); align-items: flex-end; }
+  .sky-dock { flex-wrap: wrap; border-radius: var(--r-md); max-width: calc(100% - 64px); row-gap: 2px; }
+  .sky-readout { width: 100%; padding: 0 12px; height: 36px; }
+  .sky-title { font-size: clamp(104px, 31vw, 150px); }
+  .sky-copy { bottom: 196px; gap: 14px; }
+  .sky-lede { max-width: 300px; }
+  .badge { width: .5em; height: .5em; top: -.04em; }
+  .sky .o-sphere { right: 5% !important; top: 21% !important; --sz: 76px !important; }
+  .sky-dock { display: grid; grid-template-columns: 1fr 1fr; }
+  .sky-readout { grid-column: 1 / -1; border-bottom: 1.5px solid var(--line); border-radius: 0; }
+  .sky-chips, .sky-seasons { justify-content: space-around; padding: 4px 2px; margin: 0; border: 0; }
+  .sky-seasons { border-left: 1.5px solid var(--line); }
+}
+@media (max-width: 400px) { .sky-chips button, .sky-seasons button { width: 36px; } }
+@media (prefers-reduced-motion: reduce) {
+  .particles, .cloud, .birds svg, .badge, .sun::before { animation: none; } .cloud { left: 10%; }
+  .sky-eyebrow, .sky-lede { opacity: .9; transform: none; transition: none; }
+}
+/* pause hero animation when off-screen */
+.sky.paused .particles i, .sky.paused .cloud, .sky.paused .sky-stars i, .sky.paused .sky-scroll, .sky.paused .drag-hint span, .sky.paused .badge, .sky.paused .birds svg, .sky.paused .sun::before { animation-play-state: paused; }
+/* the controls row spans the full width — only its actual controls may take pointer input, so the sun is always grabbable */
+.sky-controls { pointer-events: none; }
+.sky-controls .sky-dock, .sky-controls .magnetic { pointer-events: auto; }

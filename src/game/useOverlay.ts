@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { MouseEvent } from 'react';
-import { lockScroll } from '../../lib/scrollLock';
-import '../../styles/playground.css';
+import { lockScroll } from '../lib/scrollLock';
 
 /** Shared full-screen overlay behaviour: scroll lock + inert page, and the colour-wipe → iris exit into the portfolio. */
 export function usePrefersReducedMotion() {

@@ -48,15 +48,11 @@ Motion + CSS-3D toolkit in `src/components/fx/` (SplitText, Magnetic, Cursor, Ob
 ## Deploying
 Static SPA. `vercel.json` and `public/_redirects` provide the fallback to `index.html`.
 
-## Entry experience: game selection → two games
+## Design Dash (entry game)
 
-First visit of a browser session landing on `/` opens an interactive art-making playground before the portfolio (`src/components/playground/`, `src/lib/art/`, `src/styles/playground.css`). It is lazy-loaded, shown once per session (`sessionStorage` key `jg-played`), skipped for deep links and with `/?intro=0`, and never blocks the portfolio (Skip button, error fallback, reduced-motion support). No dependencies were added: objects are SVG drawings, so the same artwork is used on screen and for PNG export.
-- **Objects:** `src/lib/art/shapes.ts` (21 drawn kinds, 6 materials, library groups, type words). **Palettes:** `palettes.ts`.
-- **Magic Shuffle + challenges:** `compose.ts` (seeded, rule-based composition; challenge validators). **PNG export:** `exportPng.ts`.
-- **To remove it:** delete those paths and the `intro` / `CreativePlayground` lines in `src/App.tsx`.
-
-**Game selection** (`src/components/playground/Arcade.tsx`, `src/styles/arcade.css`) is the first screen: *Design Playground* (the art-making game above) or *Fix This Design*. Both have a “Games” back button; Skip to Portfolio is always visible.
-
-**Fix This Design** (`src/components/fix/`, `src/lib/fix/`, `src/styles/fixgame.css`): three poster/colour/typography challenges.
-- `lib/fix/challenges.ts` — challenge data (a deliberately bad design + an art-directed reference). Add a challenge by adding an entry.
-- `lib/fix/scoring.ts` — the fun, deterministic score (alignment, spacing, hierarchy, colour, balance); no AI, no randomness. `ops.ts` — palette / spacing / alignment edits.
+First visit of a browser session landing on `/` opens **Design Dash — the client is chasing!**, a small 3D endless runner (`src/game/`, `src/styles/dash.css`). Skip / "Portfolio" is always on screen; the header has a **Play** link to reopen it. Shown once per session (`sessionStorage` key `jg-played`), skipped for deep links and `/?intro=0`; if WebGL is unavailable or the game crashes, the portfolio simply opens.
+- **Stack:** Three.js (the only 3D dependency), loaded lazily with the game (~155 kB gzip); no assets — every model is built from primitives; sounds are WebAudio blips.
+- `engine.ts` — scene, 3-lane physics, pooled obstacles/collectibles, collisions, chase mechanic, difficulty ramp. `models.ts` — designer, client, 8 obstacles, 4 collectibles. `DesignDash.tsx` — minimal HUD/start/pause/game-over + keyboard & swipe input.
+- Controls: ← → / A D lanes, ↑ / W / Space jump, ↓ / S slide, Esc pause; swipe on touch.
+- Debug: add `?dashdebug=1` to expose `window.__dash` (snapshot / scripted spawns) for tests.
+- **To remove it:** delete `src/game`, `src/styles/dash.css`, the `three` dependency, and the `intro` / `DesignDash` lines in `src/App.tsx` + the Play link in `Nav.tsx`.
